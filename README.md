@@ -1,2 +1,2 @@
-# dictate-it
+# Dictate It
 401 Final Project
