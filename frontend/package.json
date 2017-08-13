@@ -1,0 +1,18 @@
+{
+  "name": "frontend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "jest": {
+      "globals": {
+        "__DEBUG__": true,
+        "__API_URL__": "http://localhost:3000"
+      }
+    },
+    "scripts": {
+      "test": "jest",
+      "lint": "eslint . --fix",
+      "build": "webpack",
+      "watch": "webpack-dev-server --inline --hot"
+    }
+}
