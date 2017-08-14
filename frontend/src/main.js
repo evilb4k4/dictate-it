@@ -1,9 +1,9 @@
-import './style/main.scss'
-import React from 'react'
-import ReactDom from 'react-dom'
+import './style/main.scss';
+import React from 'react';
+import ReactDom from 'react-dom';
 // import {Provider} from 'react-redux'
 
-import App from './component/app'
+import App from './component/app';
 // import storeCreate from './lib/store-create'
 // import io from './lib/io.js'
 
@@ -18,4 +18,4 @@ import App from './component/app'
 //     <App/>
 //   </Provider>
 // )
-ReactDom.render(<App />, document.getElementById('root'))
+ReactDom.render(<App />, document.getElementById('root'));

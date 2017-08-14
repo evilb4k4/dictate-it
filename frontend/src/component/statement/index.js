@@ -8,14 +8,15 @@ export class Statement extends React.Component {
     this.state = props.statement
       ? {...props.statement, created: Date.now(), editing: false}
       : {
-        content: '',
+        final: props.statement.final,
+        interim: props.statement.interim,
         docId: '',
         created: Date.now(),
         editing: false,
       };
-
-      this.handleUpdate = this.handleUpdate.bind(this);
-      this.handleChange = this.handleChange.bind(this);
+      console.log('STATEMTN_____', props)
+    this.handleUpdate = this.handleUpdate.bind(this);
+    this.handleChange = this.handleChange.bind(this);
   }
 
   handleUpdate(event) {

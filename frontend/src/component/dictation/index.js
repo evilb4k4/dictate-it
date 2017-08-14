@@ -1,6 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import Statement from '../statement';
+import Listener from '../listener';
 
 export class Dictation extends React.Component {
   constructor(props) {
@@ -8,18 +8,12 @@ export class Dictation extends React.Component {
     this.state = {
       title: '',
       description: '',
-      statements: [
-        {
-          content: 'dajsdl ajsldkjas; ldkjas;l dkjasldk asd', docId: 123,
-        },
-        {
-          content: 'aaaaaaaaa aaaaaaaaaaaaaaa aaaaaaaaaaaaaaa', docId: 214124124,
-        },
-        {
-          content: 'qwerqwerqwerqwerqwe rwqer qwer qwerq wer', docId: 12312,
-        },
-      ],
     };
+  }
+
+  startListening(event) {
+    event.preventDefault();
+
   }
 
   render() {
@@ -27,11 +21,7 @@ export class Dictation extends React.Component {
       <div className="live-dictation">
         <h2>{this.state.title}</h2>
         <p>{this.state.description}</p>
-        {
-          this.state.statements.map((statement, i) =>
-            <Statement statement={statement}  key={i} />
-          )
-        }
+        <Listener />
       </div>
     );
   }

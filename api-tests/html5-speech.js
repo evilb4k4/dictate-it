@@ -96,61 +96,61 @@ var ignore_onend;
 var start_timestamp;
 var statements = [];
 
-  start_button.style.display = 'inline-block';
-  var recognition = new webkitSpeechRecognition();
-  recognition.continuous = true;
-  recognition.interimResults = true;
+start_button.style.display = 'inline-block';
+var recognition = new webkitSpeechRecognition();
+recognition.continuous = true;
+recognition.interimResults = true;
 
-  recognition.onstart = function() {
-    recognizing = true;
-    showInfo('info_speak_now');
-  };
+recognition.onstart = function() {
+  recognizing = true;
+  showInfo('info_speak_now');
+};
 
-  recognition.onerror = function(event) {
-    if (event.error == 'no-speech') {
-      console.log('__no-speech');
-      showInfo('info_no_speech');
-      ignore_onend = true;
+recognition.onerror = function(event) {
+  if (event.error == 'no-speech') {
+    console.log('__no-speech');
+    showInfo('info_no_speech');
+    ignore_onend = true;
+  }
+  if (event.error == 'audio-capture') {
+    console.log('__audio-capture');
+    showInfo('info_no_microphone');
+    ignore_onend = true;
+  }
+  if (event.error == 'not-allowed') {
+    if (event.timeStamp - start_timestamp < 100) {
+      showInfo('info_blocked');
+    } else {
+      showInfo('info_denied');
     }
-    if (event.error == 'audio-capture') {
-      console.log('__audio-capture');
-      showInfo('info_no_microphone');
-      ignore_onend = true;
-    }
-    if (event.error == 'not-allowed') {
-      if (event.timeStamp - start_timestamp < 100) {
-        showInfo('info_blocked');
-      } else {
-        showInfo('info_denied');
-      }
-      console.log('__not-allowed');
+    console.log('__not-allowed');
 
-      ignore_onend = true;
-    }
-  };
+    ignore_onend = true;
+  }
+};
 
-  recognition.onend = function() {
-    console.log('__onend');
-    recognition.start();
-  };
+recognition.onend = function() {
+  console.log('__onend');
+  recognition.start();
+};
 
-  recognition.onresult = function(event) {
-    console.log('__onresult');
-    var interim_transcript = '\n';
-    for (var i = event.resultIndex; i < event.results.length; ++i) {
-      if (event.results[i].isFinal) {
-        statements.push(event.results[i][0].transcript);
-        final_transcript += `${'\n'}${statements[statements.length - 1]}`;
-      } else {
-        interim_transcript += `${event.results[i][0].transcript}`;
-      }
-      console.log(event.results[i][0].transcript);
+recognition.onresult = function(event) {
+  console.log('__onresult');
+  var interim_transcript = '\n';
+  for (var i = event.resultIndex; i < event.results.length; ++i) {
+    if (event.results[i].isFinal) {
+      statements.push(event.results[i][0].transcript);
+      final_transcript += `${'\n'}${statements[statements.length - 1]}`;
+    } else {
+      interim_transcript += `${event.results[i][0].transcript}`;
     }
-    final_transcript = capitalize(final_transcript);
-    final_span.innerHTML = linebreak(final_transcript);
-    interim_span.innerHTML = linebreak(interim_transcript);
-    console.log('__after onresult');
-  };
+    console.log(event.results[i][0].transcript);
+  }
+  final_transcript = capitalize(final_transcript);
+  final_span.innerHTML = linebreak(final_transcript);
+  interim_span.innerHTML = linebreak(interim_transcript);
+  console.log('__after onresult');
+};
 
 var two_line = /\n\n/g;
 var one_line = /\n/g;
