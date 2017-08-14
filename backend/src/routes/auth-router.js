@@ -7,7 +7,7 @@ const User = require('../model/user.js');
 const authRouter = module.exports = new Router();
 
 const basicAuth = require('../middleware/basic-auth.js');
-const bearerAuth = require('../middleware/lib/bearer-auth.js');
+const bearerAuth = require('../middleware/bearer-auth.js');
 
 authRouter.post('/api/auth/register', jsonParser, (req, res, next) => {
   console.log('body', req.body);
@@ -20,14 +20,14 @@ authRouter.post('/api/auth/register', jsonParser, (req, res, next) => {
     .catch(next);
 });
 
-authRouter.get('/api/auth/login', basicAuth, (req, res, next) => {
+authRouter.get('/api/auth/login', (req, res, next) => {
   console.log('api/auth/login');
   req.user.tokenCreate()
     .then(token => res.send(token))
     .catch(next);
 });
 
-authRouter.delete('api/auth/delete', bearerAuth, (req, res, next) => {
+authRouter.delete('api/auth/delete', (req, res, next) => {
   console.log('Hit DELETE', req.user);
   User.findOneAndRemove({_id: req.user._id})
     .then(user => {
