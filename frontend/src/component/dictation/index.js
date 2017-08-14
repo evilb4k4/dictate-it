@@ -28,8 +28,8 @@ export class Dictation extends React.Component {
         <h2>{this.state.title}</h2>
         <p>{this.state.description}</p>
         {
-          this.state.statements.map(statement =>
-            <Statement statement={statement} />
+          this.state.statements.map((statement, i) =>
+            <Statement statement={statement}  key={i} />
           )
         }
       </div>
