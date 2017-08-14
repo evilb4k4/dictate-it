@@ -14,20 +14,20 @@ const userSchema = mongoose.Schema({
 
 userSchema.methods.passwordHashCompare = function(password){
   return bcrypt.hash(password, 8)
-  .then(hash => {
-    this.passwordHash = hash;
-    return this;
-  });
+    .then(hash => {
+      this.passwordHash = hash;
+      return this;
+    });
 };
 
 userSchema.methods.passwordHashCompare = function(password){
   console.log('passwordHashCompare', password);
   return bcrypt.compare(password, this.passwordHash)
-  .then(isCorrect => {
-    if(isCorrect)
-      return this;
-    throw new Error('Unauthorized password does not match.');
-  });
+    .then(isCorrect => {
+      if(isCorrect)
+        return this;
+      throw new Error('Unauthorized password does not match.');
+    });
 };
 
 userSchema.methods.tokenSeedCreate = function (){
@@ -37,14 +37,14 @@ userSchema.methods.tokenSeedCreate = function (){
     let _tokenSeedCreate = () => {
       this.tokenSeed = crypto.randomBytes(32).toString('hex');
       this.save()
-      .then(() => resolve(this))
-      .catch((err) => {
-        if(tries < 1)
-          return reject(new Error('Server failed to create tokenSeed.'));
-        tries--;
-        _tokenSeedCreate();
+        .then(() => resolve(this))
+        .catch((err) => {
+          if(tries < 1)
+            return reject(new Error('Server failed to create tokenSeed.'));
+          tries--;
+          _tokenSeedCreate();
 
-      });
+        });
     };
     _tokenSeedCreate();
   });
@@ -52,9 +52,9 @@ userSchema.methods.tokenSeedCreate = function (){
 
 userSchema.methods.tokenCreate = function(){
   return this.tokenSeedCreate()
-  .then(() => {
-    return jwt.sign({tokenSeed: this.tokenSeed}, process.env.APP_SECRET);
-  });
+    .then(() => {
+      return jwt.sign({tokenSeed: this.tokenSeed}, process.env.APP_SECRET);
+    });
 };
 
 const User = module.exports = mongoose.model('user', userSchema);
