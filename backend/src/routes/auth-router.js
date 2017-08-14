@@ -6,7 +6,8 @@ const User = require('../model/user.js');
 
 const authRouter = module.exports = new Router();
 
-const basicAuth = require('../lib/basic-auth-middleware.js');
+const basicAuth = require('../middleware/basic-auth-middleware.js');
+const bearerAuth = require('../middleware/lib/bearer-auth.js');
 
 authRouter.post('/api/auth/register', jsonParser, (req, res, next) => {
   console.log('body', req.body);
