@@ -1,18 +1,22 @@
-'use strict';
+// INTERFACE
+export default (err, req, res, next) => {
+  console.error(err);
+  if(err.status)
+    return res.sendStatus(err.status);
 
-module.exports = (err, req, res, next) => {
-  // console.error('error', err);
-  if(err.message.toLowerCase().includes('required'))
+  err.message = err.message.toLowerCase();
+
+  if(err.message.includes('validation failed'))
     return res.sendStatus(400);
 
-  if(err.message.toLowerCase().includes('server failed'))
+  if(err.message.includes('duplicate key'))
     return res.sendStatus(409);
 
-  if(err.message.toLowerCase().includes('unauthorized'))
-    return res.sendStatus(401);
+  if(err.message.includes('objectid failed'))
+    return res.sendStatus(404);
 
-  if(err.message.toLowerCase().includes('bad request'))
-    return res.sendStatus(400);
+  if(err.message.includes('unauthorized'))
+    return res.sendStatus(401);
 
   res.sendStatus(500);
 };

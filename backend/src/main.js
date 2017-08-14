@@ -1,3 +1,5 @@
-import * as server from './lib/server.js';
+'use strict';
+
+const server = require('./lib/server.js');
 
 server.start();

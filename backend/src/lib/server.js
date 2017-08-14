@@ -1,53 +1,71 @@
 'use strict';
 
-const cors = require('cors');
-const morgan = require('morgan');
-const express = require('express');
-const mongoose = require('mongoose');
+import cors from 'cors';
+import io from './io.js';
+import morgan from 'morgan';
+import {Server} from 'http';
+import express from 'express';
+import * as mongo from './mongo.js';
 
-mongoose.Promise = Promise;
-mongoose.connect(process.env.MONGODB_URI);
+import authRouter from '../router/auth.js';
+import fourOhFour from '../middleware/four-oh-four.js';
+import errorHandler from '../middleware/error-middleware.js';
+
+import authSubscriber from '../subscribe/auth.js';
 
 const app = express();
 
 app.use(morgan('dev'));
-app.use(cors());
-
+app.use(cors({
+  origin: process.env.CORS_ORIGINS.split(' '),
+  credentials: true,
+}));
 //user route
-app.use(require('../routes/auth-router.js'));
+app.use(authRouter);
+
+app.use(fourOhFour);
+app.use(errorHandler);
+
+const state = {
+  isOn: false,
+  http: null,
+};
 
 //404 route for invalid path request
-app.all('/api/*', (req, res, next) => res.sendStatus(404));
-
-//error handler
-app.use(require('./error-handler.js'));
-
+export const start = () => {
 //start and stop database
-const server = module.exports = {};
-server.isOn = false;
-server.start = () => {
   return new Promise((resolve, reject) => {
-    if(!server.isOn){
-      server.http = app.listen(process.env.PORT, () => {
-        server.isOn = true;
-        console.log('server is running on PORT ', process.env.PORT);
-        resolve();
-      });
-      return;
-    }
-    reject(new Error('server is already running'));
+    if (state.isOn)
+      return reject(new Error('USAGE ERROR: the state is on'));
+    state.isOn = true;
+    mongo.start()
+  .then(() => {
+    state.http = Server(app);
+    let subscribers = Object.assign( authSubscriber);
+    io(state.http, subscribers);
+
+    state.http.listen(process.env.PORT, () => {
+      console.log('__SERVER_UP__', process.env.PORT);
+      resolve();
+    });
+  })
+    .catch(reject);
   });
 };
 
-server.stop = () => {
+export const stop = () => {
   return new Promise((resolve, reject) => {
-    if(server.http && server.isOn){
-      return server.http.close(() => {
-        server.isOn = false;
-        console.log('server just got killed');
+    if(!state.isOn)
+      return reject(new Error('USAGE ERROR: the state is off'));
+    return mongo.stop()
+    .then(() => {
+      state.http.close(() => {
+        console.log('__SERVER_DOWN__');
+        state.isOn = false;
+        state.http = null;
         resolve();
       });
-    }
-    reject(new Error('server is not runnning'));
+    })
+    .catch(reject);
   });
 };
