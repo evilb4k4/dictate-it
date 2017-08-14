@@ -1,8 +1,10 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import Landing from '../landing-container';
+import LandingContainer from '../landing-container';
+import Dictation from '../dictation';
+import {MemoryRouter, Switch, Route} from 'react-router-dom';
 
-class App extends React.component{
+class App extends React.Component {
 
   render() {
     return (
@@ -13,10 +15,14 @@ class App extends React.component{
         </header>
         <MemoryRouter>
           <Switch location={{ pathname: this.props.route }}>
-            <Route path='/landing' component={Landing} />
+            <Route exact path='/dictation' component={Dictation} />
           </Switch>
         </MemoryRouter>
       </main>
     );
   }
 }
+
+export default App;
+
+//<Route path='/landing' component={Landing} />
