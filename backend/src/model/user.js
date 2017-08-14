@@ -1,67 +1,84 @@
-'use strict';
+import faker from 'faker';
+import {randomBytes} from 'crypto';
+import createError from 'http-errors';
+import promisify from '../lib/promisify.js';
+import * as bcrypt from 'bcrypt';
+import * as jwt from 'jsonwebtoken';
+import Mongoose, {Schema} from 'mongoose';
 
-const crypto = require('crypto');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const mongoose = require('mongoose');
-
-const userSchema = mongoose.Schema({
-  passwordHash: {type: String, required: true},
+const userSchema = new Schema({
+  passwordHash: {type: String},
   email: {type: String, required: true, unique: true},
   username: {type: String, required: true, unique: true},
-  tokenSeed: {type: String, required: true, unique: true},
+  tokenSeed: {type: String, required: true, default: ''},
 });
 
-userSchema.methods.passwordHashCompare = function(password){
-  return bcrypt.hash(password, 8)
-  .then(hash => {
-    this.passwordHash = hash;
-    return this;
-  });
-};
-
-userSchema.methods.passwordHashCompare = function(password){
+userSchema.methods.passwordCompare = function(password){
   console.log('passwordHashCompare', password);
   return bcrypt.compare(password, this.passwordHash)
-  .then(isCorrect => {
-    if(isCorrect)
+    .then(success => {
+      if(!success)
+        throw createError(401, 'AUTH ERROR: wrong password');
       return this;
-    throw new Error('Unauthorized password does not match.');
-  });
+    });
 };
 
-userSchema.methods.tokenSeedCreate = function (){
-  return new Promise((resolve, reject) => {
-    let tries = 1;
-
-    let _tokenSeedCreate = () => {
-      this.tokenSeed = crypto.randomBytes(32).toString('hex');
-      this.save()
-      .then(() => resolve(this))
-      .catch((err) => {
-        if(tries < 1)
-          return reject(new Error('Server failed to create tokenSeed.'));
-        tries--;
-        _tokenSeedCreate();
-
-      });
-    };
-    _tokenSeedCreate();
-  });
+userSchema.methods.tokenCreate = function (){
+  this.tokenSeed = randomBytes(32).toString('base64');
+  return this.save()
+    .then(user => {
+      return jwt.sign({tokenSeed: this.tokenSeed}, process.env.SECRET);
+    })
+    .then(token => {
+      return token;
+    });
 };
 
-userSchema.methods.tokenCreate = function(){
-  return this.tokenSeedCreate()
-  .then(() => {
-    return jwt.sign({tokenSeed: this.tokenSeed}, process.env.APP_SECRET);
-  });
+const User = Mongoose.model('user', userSchema);
+
+User.createFromSignup = function(user){
+  if(!user.password || !user.email || !user.username)
+    return Promise.reject(
+      createError(400, 'VALIDATION ERROR: missing username email or password'));
+
+  let {password} = user;
+  user = Object.assign({}, user, {password: undefined});
+
+  return bcrypt.hash(password, 1)
+    .then(passwordHash => {
+      let data = Object.assign({}, user, {passwordHash});
+      return new User(data).save();
+    });
 };
 
-const User = module.exports = mongoose.model('user', userSchema);
-
-User.create = function(data){
-  let password = data.password;
-  delete data.password;
-  return new User(data).passwordHashCreate(password)
-    .then((user) => user.tokenSeedCreate());
+User.handleOAUTH = function(data){
+  if(!data || !data.email)
+    return Promise.reject(
+      createError(400, 'VALIDATION ERROR: missing email'));
+  return User.findOne({email: data.email})
+    .then(user => {
+      if(!user)
+        throw new Error('create the user');
+      console.log('loggin into account');
+      return user;
+    })
+    .catch(() => {
+      console.log('creating account');
+      return new User({
+        username: faker.internet.userName(),
+        email: data.email,
+      }).save();
+    });
 };
+
+User.fromToken = function(token){
+  return promisify(jwt.verify)(token, process.env.SECRET)
+    .then(({tokenSeed}) => User.findOne({tokenSeed}))
+    .then((user) => {
+      if(!user)
+        throw createError(401, 'AUTH ERROR: user not found');
+      return user;
+    });
+};
+
+export default User;
