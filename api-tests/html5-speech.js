@@ -147,8 +147,7 @@ var statements = [];
       console.log(event.results[i][0].transcript);
     }
     final_transcript = capitalize(final_transcript);
-    var statement = `${final_transcript.split('\n').map(item => `<p>${item}</p>`).join('')}`
-    final_span.innerHTML = statement;
+    final_span.innerHTML = linebreak(final_transcript);
     interim_span.innerHTML = linebreak(interim_transcript);
     console.log('__after onresult');
   };
