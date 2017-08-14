@@ -61,7 +61,7 @@ class Listener extends React.Component {
         console.log('RESULT', event.results[i][0].transcript);
       }
       final_transcript = capitalize(final_transcript);
-      this.setState({final: linebreak(final_transcript), interim: linebreak(interim_transcript)})
+      this.setState({final: linebreak(final_transcript), interim: linebreak(interim_transcript)});
       console.log('__after onresult');
     };
 
