@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "test": "jest",
-    "lint": "eslint .",
+    "lint": "eslint . --fix",
     "build": "webpack",
     "watch": "webpack-dev-server --inline --hot"
   },
