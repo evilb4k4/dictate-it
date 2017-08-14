@@ -1,10 +1,10 @@
-import faker from 'faker';
 import {randomBytes} from 'crypto';
 import createError from 'http-errors';
 import promisify from '../lib/promisify.js';
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
 import Mongoose, {Schema} from 'mongoose';
+import faker from 'faker';
 
 const userSchema = new Schema({
   passwordHash: {type: String},

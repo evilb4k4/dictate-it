@@ -7,9 +7,9 @@ import {Server} from 'http';
 import express from 'express';
 import * as mongo from './mongo.js';
 
-import authRouter from '../router/auth.js';
-import fourOhFour from '../middleware/four-oh-four.js';
-import errorHandler from '../middleware/error-middleware.js';
+import authRouter from '../routes/auth-router.js';
+// import fourOhFour from '../middleware/four-oh-four.js';
+import errorHandler from '../middleware/error-handler.js';
 
 import authSubscriber from '../subscribe/auth.js';
 
@@ -23,7 +23,7 @@ app.use(cors({
 //user route
 app.use(authRouter);
 
-app.use(fourOhFour);
+// app.use(fourOhFour);
 app.use(errorHandler);
 
 const state = {
