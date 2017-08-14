@@ -33,7 +33,11 @@
     "jsonwebtoken": "^7.4.2",
     "lodash": "^4.17.4",
     "mongoose": "^4.11.5",
+<<<<<<< HEAD
+    "morgan": "^1.8.2"
+=======
     "morgan": "^1.8.2",
     "socket.io": "^2.0.3"
+>>>>>>> c77568414d40bba016e940daa3fcbcd0e54baf89
   }
 }
