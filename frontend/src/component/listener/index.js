@@ -5,28 +5,28 @@ import Statement from '../statement';
 
 class DummyStatement extends React.Component{
   constructor(props){
-    super(props)
+    super(props);
     this.state = {
-      content: props.content
-    }
+      content: props.content,
+    };
   }
 
   componentWillReceiveProps(props){
-    this.setState({content: props.content})
+    this.setState({content: props.content});
   }
 
   shouldComponentUpdate(nextProps){
     if(nextProps.content == this.state.content)
-      return false
-    return true
+      return false;
+    return true;
   }
 
   render(){
     return (
       <input
         value={this.state.content}
-        />
-    )
+      />
+    );
   }
 }
 
@@ -79,14 +79,14 @@ class Listener extends React.Component {
     recognition.onresult = function(event) {
       console.log('__onresult');
       var interim_transcript = '\n';
-        for (var i = event.resultIndex; i < event.results.length; ++i) {
-          if (event.results[i].isFinal) {
-            final_transcript += `\n${event.results[i][0].transcript}`;
-          } else {
-            interim_transcript += `${event.results[i][0].transcript}`;
-          }
-          console.log('RESULT', event.results[i][0].transcript);
+      for (var i = event.resultIndex; i < event.results.length; ++i) {
+        if (event.results[i].isFinal) {
+          final_transcript += `\n${event.results[i][0].transcript}`;
+        } else {
+          interim_transcript += `${event.results[i][0].transcript}`;
         }
+        console.log('RESULT', event.results[i][0].transcript);
+      }
       final_transcript = capitalize(final_transcript);
       this.setState({final: linebreak(final_transcript), interim: linebreak(interim_transcript)});
       console.log('__after onresult');
@@ -122,11 +122,11 @@ class Listener extends React.Component {
     // }
 
 
-        let lines = ['asldfj', 'asdlkjf', 'alksdjf']
-        for(var i =0; i<this.state.final.length; i+=1){
-          lines.push(this.state.final.substring(i, i+1  ))
-        }
-    console.log('lines',lines)
+    let lines = ['asldfj', 'asdlkjf', 'alksdjf'];
+    for(var i =0; i<this.state.final.length; i+=1){
+      lines.push(this.state.final.substring(i, i+1  ));
+    }
+    console.log('lines',lines);
     return (
       <div>
         <button
