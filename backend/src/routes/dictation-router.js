@@ -1,4 +1,3 @@
-'use strict';
+import {Router} from 'express'
+import bodyParser from 'body-parser'
 
-const {Router} = require('express');
-const jsonParser = require('body-parser').json();
