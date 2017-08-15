@@ -3,8 +3,8 @@ import * as _ from 'lodash';
 import {connect} from 'react-redux';
 import superagent from 'superagent';
 import * as util from '../../lib/util.js';
-import * as auth from '../../action/auth.js';
-import * as route from '../../action/route.js';
+import * as auth from '../../action/auth-actions.js';
+import * as route from '../../action/route-actions.js';
 import {Redirect} from 'react-router';
 import validator from 'validator';
 
