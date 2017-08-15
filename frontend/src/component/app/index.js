@@ -1,7 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import * as querystring from 'querystring';
-import {MemoryRouter, Switch, Route} from 'react-router-dom';
+import {BrowserRouter, Link, Route} from 'react-router-dom';
 import * as util from '../../lib/util.js';
 import * as auth from '../../action/auth.js';
 import * as route from '../../action/route.js';
@@ -27,33 +27,30 @@ export class App extends React.Component {
     let googleLoginURL = `${googleLoginBaseURL}?${googleLoginQuery}`;
     return (
       <div className='app'>
-        <main>
-          <header>
-            <h1> Dictate It! </h1>
-            {util.renderIf(this.props.token,
-              <p>
-                <button onClick={this.props.goToLanding}>Home</button>
-                <button onClick={this.props.goToNewDictation}>New Dictation</button>
-              </p>
-            )}
-            {util.renderIf(!this.props.token,
-              <p>
-                <button onClick={this.props.goToLogin}>Login</button>
-                <a href={googleLoginURL}>Login with Google</a>
-                <button onClick={this.props.goToSignup}>Sign Up</button>
-              </p>
-            )}
-          </header>
-        </main>
-
-        <MemoryRouter>
-          <Switch location={{pathname: this.props.route}}>
+        <BrowserRouter>
+          <main>
+            <header>
+              <h1> Dictate It! </h1>
+              {util.renderIf(this.props.token,
+                <p>
+                  <Link to='/landing'>Home</Link>
+                  <Link to='/dictation'>New Dictation</Link>
+                </p>
+              )}
+              {util.renderIf(!this.props.token,
+                <p>
+                  <Link to='/login'>Login</Link>
+                  <a href={googleLoginURL}>Login with Google</a>
+                  <Link to='/signup'>Sign Up</Link>
+                </p>
+              )}
+            </header>
             <Route exact path='/login' component={LoginContainer} />
             <Route exact path='/signup' component={SignupContainer} />
             <Route exact path='/landing' component={LandingContainer} />
             <Route exact path='/dictation' component={Dictation} />
-          </Switch>
-        </MemoryRouter>
+          </main>
+        </BrowserRouter>
       </div>
     );
   }

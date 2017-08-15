@@ -40,7 +40,7 @@ export class Statement extends React.Component {
           behavioursEnabled: false,
           showGutter: false,
           showLineNumbers: false,
-          fontSize: 15
+          fontSize: 15,
         }}
 
         value={this.state.content}
