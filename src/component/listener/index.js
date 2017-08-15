@@ -18,6 +18,7 @@ export class Listener extends React.Component {
 
   handleStartListening(event) {
     event.preventDefault();
+    // eslint-disable-next-line no-undef
     let recognition = new webkitSpeechRecognition();
     recognition.continuous = true;
     recognition.interimResults = true;
