@@ -2,7 +2,7 @@ import {
   statementCreate,
   statementUpdate,
   statementDelete,
-} from '../action/statement.js';
+} from '../action/statement-actions.js';
 
 describe('testing statement actions', () => {
   test('statementCreate returns a STATEMENT_CREATE action', () => {
