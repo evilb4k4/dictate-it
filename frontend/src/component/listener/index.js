@@ -52,14 +52,14 @@ class Listener extends React.Component {
     recognition.onresult = function(event) {
       console.log('__onresult');
       var interim_transcript = '\n';
-      for (var i = event.resultIndex; i < event.results.length; ++i) {
-        if (event.results[i].isFinal) {
-          final_transcript += `${'\n'}${event.results[i][0].transcript}`;
-        } else {
-          interim_transcript += `${event.results[i][0].transcript}`;
+        for (var i = event.resultIndex; i < event.results.length; ++i) {
+          if (event.results[i].isFinal) {
+            final_transcript += `\n${event.results[i][0].transcript}`;
+          } else {
+            interim_transcript += `${event.results[i][0].transcript}`;
+          }
+          console.log('RESULT', event.results[i][0].transcript);
         }
-        console.log('RESULT', event.results[i][0].transcript);
-      }
       final_transcript = capitalize(final_transcript);
       this.setState({final: linebreak(final_transcript), interim: linebreak(interim_transcript)});
       console.log('__after onresult');
@@ -89,6 +89,12 @@ class Listener extends React.Component {
   }
 
   render() {
+    // let lines, states;
+    // for(var i = 0; i < this.state.final.length; i+=80) {
+    //   <Statement statement={this.state.final.substring(i, i+80)} />
+    // }
+
+    // console.log('lines',lines)
     return (
       <div>
         <button
@@ -98,12 +104,12 @@ class Listener extends React.Component {
           {util.renderIf(!this.state.listening, 'Start Listening')}
           {util.renderIf(this.state.listening, 'Stop Listening')}
         </button>
-        <p>{this.state.final} {this.state.interim}</p>
+
+
+        <Statement statement={this.state} />
       </div>
     );
   }
 }
 
 export default Listener;
-
-// <Statement statement={item} key={i} />
