@@ -2,7 +2,7 @@ import {
   dictationCreate,
   dictationUpdate,
   dictationDelete,
-} from '../action/dictation.js';
+} from '../action/dictation-actions.js';
 
 describe('testing dictation actions', () => {
   test('dictationCreate returns a DICTATION_CREATE action', () => {
