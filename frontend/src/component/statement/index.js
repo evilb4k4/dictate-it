@@ -2,21 +2,23 @@ import React from 'react';
 import {connect} from 'react-redux';
 import * as util from '../../lib/util';
 
-export class Statement extends React.Component {
+class Statement extends React.Component {
   constructor(props) {
     super(props);
-    this.state = props.statement
-      ? {...props.statement, created: Date.now(), editing: false}
-      : {
-        final: props.statement.final,
-        interim: props.statement.interim,
+    this.state = {
+        content: '',
         docId: '',
         created: Date.now(),
         editing: false,
+        position: 2,
       };
       console.log('STATEMTN_____', props)
     this.handleUpdate = this.handleUpdate.bind(this);
     this.handleChange = this.handleChange.bind(this);
+  }
+
+  componentWillReceiveProps(props) {
+    this.setState({content: `${props.statement.final} ${props.statement.interim}`});
   }
 
   handleUpdate(event) {
@@ -26,9 +28,15 @@ export class Statement extends React.Component {
 
   handleChange(event) {
     this.setState({ content: event.target.value });
+    console.log('selection staaaaaaaaaaaaaaaaaaaart', event.target.selectionStart)
+    console.log('e.target.selectionStart')
+    // event.target.selectionStart = event.target.selectionEnd = 5;
   }
 
   render() {
+
+
+    // console.log('lines', lines)
     return (
       <span>
         {util.renderIf(!this.state.editing,
@@ -38,14 +46,17 @@ export class Statement extends React.Component {
         )}
         {util.renderIf(this.state.editing,
           <form onSubmit={this.handleUpdate}>
-            <input
+            <textarea
               autoFocus
-              type="text"
+              size={100}
+              value={this.state.content}
+              selectionStart={this.state.position}
+              selectionEnd={this.state.position}
               name="content"
               onBlur={this.handleUpdate}
               onChange={this.handleChange}
-              value={this.state.content}
             />
+
           </form>
         )}
       </span>

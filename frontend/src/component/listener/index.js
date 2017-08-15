@@ -3,6 +3,33 @@ import {connect} from 'react-redux';
 import * as util from '../../lib/util';
 import Statement from '../statement';
 
+class DummyStatement extends React.Component{
+  constructor(props){
+    super(props)
+    this.state = {
+      content: props.content
+    }
+  }
+
+  componentWillReceiveProps(props){
+    this.setState({content: props.content})
+  }
+
+  shouldComponentUpdate(nextProps){
+    if(nextProps.content == this.state.content)
+      return false
+    return true
+  }
+
+  render(){
+    return (
+      <input
+        value={this.state.content}
+        />
+    )
+  }
+}
+
 class Listener extends React.Component {
   constructor(props) {
     super(props);
@@ -52,14 +79,14 @@ class Listener extends React.Component {
     recognition.onresult = function(event) {
       console.log('__onresult');
       var interim_transcript = '\n';
-      for (var i = event.resultIndex; i < event.results.length; ++i) {
-        if (event.results[i].isFinal) {
-          final_transcript += `${'\n'}${event.results[i][0].transcript}`;
-        } else {
-          interim_transcript += `${event.results[i][0].transcript}`;
+        for (var i = event.resultIndex; i < event.results.length; ++i) {
+          if (event.results[i].isFinal) {
+            final_transcript += `\n${event.results[i][0].transcript}`;
+          } else {
+            interim_transcript += `${event.results[i][0].transcript}`;
+          }
+          console.log('RESULT', event.results[i][0].transcript);
         }
-        console.log('RESULT', event.results[i][0].transcript);
-      }
       final_transcript = capitalize(final_transcript);
       this.setState({final: linebreak(final_transcript), interim: linebreak(interim_transcript)});
       console.log('__after onresult');
@@ -89,6 +116,17 @@ class Listener extends React.Component {
   }
 
   render() {
+    // let lines, states;
+    // for(var i = 0; i < this.state.final.length; i+=10) {
+    //   <Statement statement={this.state.final.substring(i, i+10)} />
+    // }
+
+
+        let lines = ['asldfj', 'asdlkjf', 'alksdjf']
+        for(var i =0; i<this.state.final.length; i+=1){
+          lines.push(this.state.final.substring(i, i+1  ))
+        }
+    console.log('lines',lines)
     return (
       <div>
         <button
@@ -98,12 +136,13 @@ class Listener extends React.Component {
           {util.renderIf(!this.state.listening, 'Start Listening')}
           {util.renderIf(this.state.listening, 'Stop Listening')}
         </button>
-        <p>{this.state.final} {this.state.interim}</p>
+
+        {lines.map((item, i) =>
+          <DummyStatement key={i} content={item} />
+        )}
       </div>
     );
   }
 }
 
 export default Listener;
-
-// <Statement statement={item} key={i} />
