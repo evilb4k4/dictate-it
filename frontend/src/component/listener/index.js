@@ -61,6 +61,10 @@ class Listener extends React.Component {
 
   handleStartListening(event) {
     event.preventDefault();
+    let recognition = new webkitSpeechRecognition();
+    recognition.continuous = true;
+    recognition.interimResults = true;
+
     if(this.state.listening) {
       this.setState({ listening: false});
       recognition.stop();
@@ -68,9 +72,6 @@ class Listener extends React.Component {
     } else {
       this.setState({ listening: true });
     }
-    let recognition = new webkitSpeechRecognition();
-    recognition.continuous = true;
-    recognition.interimResults = true;
 
     let final_transcript = '';
     let recognizing = false;
@@ -143,12 +144,6 @@ class Listener extends React.Component {
   }
 
   render() {
-    // let lines, states;
-    // for(var i = 0; i < this.state.final.length; i+=10) {
-    //   <Statement statement={this.state.final.substring(i, i+10)} />
-    // }
-
-
         let lines = []
         for(var i =0; i<this.state.final.length; i+=80){
           lines.push(this.state.final.substring(i, i+80  ))
