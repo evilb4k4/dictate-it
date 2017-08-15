@@ -12,22 +12,22 @@ import SignupContainer from '../signup-container';
 export class App extends React.Component {
 
   render(){
-  
+
     return (
       <div className='app'>
         <main>
           <header>
             <h1> Dictate It! </h1>
-            <button onClick={this.props.goToLanding}>Home</button>
+            <button onClick={this.props.goToSignup}>Home</button>
           </header>
           <Dictation />
         </main>
 
         <MemoryRouter>
           <Switch location={{pathname: this.props.route}}>
+            <Route exact path='/' component={() => <p> Login </p>} />
             <Route exact path='/signup' component={SignupContainer} />
             <Route exact path='/landing' component={LandingContainer} />
-            <Route exact path='/login' component={() => <p> Login </p>} />
           </Switch>
         </MemoryRouter>
       </div>
@@ -42,9 +42,9 @@ let mapStateToProps = (state) => ({
 
 let mapDispatchToProps = (dispatch) => ({
   login: (token) => dispatch(auth.login(token)),
-  goToLanding: () => dispatch(route.switchRoute('/landing')),
-  goToLogin: () => dispatch(route.switchRoute('/login')),
+  goToLogin: () => dispatch(route.switchRoute('/')),
   goToSignup: () => dispatch(route.switchRoute('/signup')),
+  goToLanding: () => dispatch(route.switchRoute('/landing')),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

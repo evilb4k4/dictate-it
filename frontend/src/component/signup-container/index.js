@@ -20,7 +20,7 @@ export class SignupContainer extends React.Component {
 
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
-    this.validateChange = this.validateChange.bind(this);
+    // this.validateChange = this.validateChange.bind(this);
   }
 
   handleSubmit(e){
@@ -34,6 +34,12 @@ export class SignupContainer extends React.Component {
       });
     }
   }
+
+  handleChange(e) {
+    let {name, value} = event.target;
+    this.setState({ [name]: value });
+  }
+
   render(){
     return(
       <div className='signup-container'>
