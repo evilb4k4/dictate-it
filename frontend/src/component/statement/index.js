@@ -40,7 +40,7 @@ export class Statement extends React.Component {
           behavioursEnabled: false,
           showGutter: false,
           showLineNumbers: false,
-          fontSize: 20
+          fontSize: 15
         }}
 
         value={this.state.content}
@@ -49,11 +49,11 @@ export class Statement extends React.Component {
   }
 }
 
-const mapStateToProps = ({
+const mapStateToProps = state => ({
 
 });
 
-const mapDispatchToProps = ({
+const mapDispatchToProps = (getState, dispatch) => ({
 
 });
 

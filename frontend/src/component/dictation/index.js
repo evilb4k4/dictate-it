@@ -11,11 +11,6 @@ export default class Dictation extends React.Component {
     };
   }
 
-  startListening(event) {
-    event.preventDefault();
-
-  }
-
   render() {
     return (
       <div className="live-dictation">

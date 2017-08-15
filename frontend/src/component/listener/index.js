@@ -122,11 +122,11 @@ export class Listener extends React.Component {
   }
 }
 
-const mapStateToProps = ({
+const mapStateToProps = state => ({
 
 });
 
-const mapDispatchToProps = ({
+const mapDispatchToProps = (getState, dispatch) => ({
 
 });
 
