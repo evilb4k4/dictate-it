@@ -5,6 +5,7 @@ import superagent from 'superagent';
 import * as util from '../../lib/util.js';
 import * as auth from '../../action/auth.js';
 import * as route from '../../action/route.js';
+import {Redirect} from 'react-router';
 import validator from 'validator';
 
 export class SignupContainer extends React.Component {
@@ -42,10 +43,11 @@ export class SignupContainer extends React.Component {
   }
 
   render(){
-    if(this.props.token)
-      this.props.goToLanding();
     return(
       <div className='signup-container'>
+        {util.renderIf(this.props.token,
+          <Redirect to='/landing' />
+        )}
         <form onSubmit={this.handleSubmit}>
           <input
             name='email'
