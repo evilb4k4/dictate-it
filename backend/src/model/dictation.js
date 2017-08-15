@@ -7,7 +7,6 @@ const dictationSchema = mongoose.Schema({
   title: {type: String, required: true, minlength: 1, maxlength: 256},
   public: {type: Boolean, required: true, default: true},
   timestamp: {type: Date, default: Date.now},
-  statements: [{type: mongoose.Schema.Types.ObjectId, ref: 'statement'}],
 });
 
 module.exports = mongoose.model('dictation', dictationSchema);

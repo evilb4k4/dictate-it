@@ -11,13 +11,11 @@ const statementSchema = mongoose.Schema({
 });
 
 statementSchema.pre('save', function(next) {
-  console.log('pre save doc', this);
+  console.log('pre save statement', this);
   Dictation.findById(this.dictation)
     .then(dictation => {
-      let statementIDSet = new Set(dictation.statements);
-      statementIDSet.add(this._id);
-      dictation.statements = Array.from(statementIDSet);
-      return dictation.save();
+      if(!dictation)
+        throw 'nonexistent dictation';
     })
     .then(() => next())
     .catch(() =>
