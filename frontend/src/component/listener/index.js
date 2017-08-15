@@ -123,7 +123,7 @@ export class Listener extends React.Component {
 }
 
 const mapStateToProps = ({
-  
+
 });
 
 const mapDispatchToProps = ({
