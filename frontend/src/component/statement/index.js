@@ -6,13 +6,13 @@ class Statement extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-        content: '',
-        docId: '',
-        created: Date.now(),
-        editing: false,
-        position: 2,
-      };
-      console.log('STATEMTN_____', props)
+      content: '',
+      docId: '',
+      created: Date.now(),
+      editing: false,
+      position: 2,
+    };
+    console.log('STATEMTN_____', props);
     this.handleUpdate = this.handleUpdate.bind(this);
     this.handleChange = this.handleChange.bind(this);
   }
@@ -28,8 +28,8 @@ class Statement extends React.Component {
 
   handleChange(event) {
     this.setState({ content: event.target.value });
-    console.log('selection staaaaaaaaaaaaaaaaaaaart', event.target.selectionStart)
-    console.log('e.target.selectionStart')
+    console.log('selection staaaaaaaaaaaaaaaaaaaart', event.target.selectionStart);
+    console.log('e.target.selectionStart');
     // event.target.selectionStart = event.target.selectionEnd = 5;
   }
 
