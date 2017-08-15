@@ -2,50 +2,8 @@ import React from 'react';
 import {connect} from 'react-redux';
 import * as util from '../../lib/util';
 import Statement from '../statement';
-import AceEditor from 'react-ace';
 
-class DummyStatement extends React.Component{
-  constructor(props){
-    super(props)
-    this.state = {
-      content: props.content
-    }
-  }
-
-  componentWillReceiveProps(props){
-    this.setState({content: props.content})
-  }
-
-  shouldComponentUpdate(nextProps){
-    if(nextProps.content == this.state.content)
-      return false
-    return true
-  }
-
-  render(){
-    return (
-      <AceEditor
-        width='100%'
-        onChange={this.props.handleChange}
-        editorProps={{$blockScrolling: true}}
-        setOptions={{
-          wrap: true,
-          maxLines: Infinity,
-          autoScrollEditorIntoView: true,
-          wrapBehavioursEnabled: true,
-          indentedSoftWrap: false,
-          behavioursEnabled: false,
-          showGutter: false,
-          showLineNumbers: false,
-        }}
-
-        value={this.state.content}
-      />
-    )
-  }
-}
-
-class Listener extends React.Component {
+export class Listener extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -56,7 +14,6 @@ class Listener extends React.Component {
     };
 
     this.handleStartListening = this.handleStartListening.bind(this);
-    this.hanldeChange = this.handleChange.bind(this);
   }
 
   handleStartListening(event) {
@@ -103,14 +60,14 @@ class Listener extends React.Component {
     recognition.onresult = function(event) {
       console.log('__onresult');
       var interim_transcript = '\n';
-        for (var i = event.resultIndex; i < event.results.length; ++i) {
-          if (event.results[i].isFinal) {
-            final_transcript += `\n${event.results[i][0].transcript}`;
-          } else {
-            interim_transcript += `${event.results[i][0].transcript}`;
-          }
-          console.log('RESULT', event.results[i][0].transcript);
+      for (var i = event.resultIndex; i < event.results.length; ++i) {
+        if (event.results[i].isFinal) {
+          final_transcript += `\n${event.results[i][0].transcript}`;
+        } else {
+          interim_transcript += `${event.results[i][0].transcript}`;
         }
+        console.log('RESULT', event.results[i][0].transcript);
+      }
       final_transcript = capitalize(final_transcript);
       this.setState({final: linebreak(final_transcript), interim: linebreak(interim_transcript)});
       console.log('__after onresult');
@@ -139,16 +96,12 @@ class Listener extends React.Component {
     ignore_onend = true;
   }
 
-  handleChange(event) {
-    this.setState({ final: event.target.value });
-  }
-
   render() {
-        let lines = []
-        for(var i =0; i<this.state.final.length; i+=80){
-          lines.push(this.state.final.substring(i, i+80  ))
-        }
-    console.log('lines',lines)
+    let lines = [];
+    for(var i = 0; i < this.state.final.length; i += 80){
+      lines.push(this.state.final.substring(i, i + 80));
+    }
+    console.log('lines',lines);
     return (
       <div>
         <button
@@ -160,7 +113,7 @@ class Listener extends React.Component {
         </button>
 
         {lines.map((item, i) =>
-          <DummyStatement onChange={this.handleChange} key={i} content={item} />
+          <Statement key={i} content={item} />
         )}
 
         <span>{this.state.interim}</span>
@@ -169,4 +122,12 @@ class Listener extends React.Component {
   }
 }
 
-export default Listener;
+const mapStateToProps = ({
+  
+});
+
+const mapDispatchToProps = ({
+
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Listener);
