@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import superagent from 'superagent';
 import * as util from '../../lib/util.js';
 import * as auth from '../../action/auth.js';
+import * as route from '../../action/route.js';
 import validator from 'validator';
 
 export class SignupContainer extends React.Component {
@@ -41,6 +42,8 @@ export class SignupContainer extends React.Component {
   }
 
   render(){
+    if(this.props.token)
+      this.props.goToLanding();
     return(
       <div className='signup-container'>
         <form onSubmit={this.handleSubmit}>
@@ -75,10 +78,12 @@ export class SignupContainer extends React.Component {
 }
 
 export const mapStateToProps = (state) => ({
+  token: state.token,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
   signup: (user) => dispatch(auth.signupRequest(user)),
+  goToLanding: () => dispatch(route.swichRoute('/landing')),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SignupContainer);

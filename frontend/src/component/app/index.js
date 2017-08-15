@@ -12,7 +12,6 @@ import SignupContainer from '../signup-container';
 import LoginContainer from '../login-container';
 
 export class App extends React.Component {
-
   render(){
     if(this.props.token)
       this.props.goToLogin();
