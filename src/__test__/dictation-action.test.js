@@ -8,7 +8,6 @@ describe('testing dictation actions', () => {
   test('dictationCreate returns a DICTATION_CREATE action', () => {
     let action = dictationCreate({title: 'cool'});
     expect(action.type).toEqual('DICTATION_CREATE');
-    console.log(action);
     expect(action.payload.id).toBeTruthy();
     expect(action.payload.timestamp).toBeTruthy();
     expect(action.payload.title).toBe('cool');
