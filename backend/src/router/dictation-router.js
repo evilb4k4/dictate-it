@@ -5,6 +5,7 @@ import bodyParser from 'body-parser';
 
 export default new Router()
   .post('/create', bearerAuth, bodyParser.json(), (req, res, next) => {
+    req.body.owner_id = req.user._id;
     new Dictation(req.body)
       .save()
       .then(dictation => res.json(dictation))

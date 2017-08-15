@@ -8,6 +8,7 @@ export default class Dictation extends React.Component {
     this.state = {
       title: '',
       description: '',
+      public: true,
     };
   }
 
@@ -21,3 +22,5 @@ export default class Dictation extends React.Component {
     );
   }
 }
+
+// add checkbox form for public or private 
