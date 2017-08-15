@@ -3,34 +3,7 @@ import {connect} from 'react-redux';
 import * as util from '../../lib/util';
 import Statement from '../statement';
 
-class DummyStatement extends React.Component{
-  constructor(props){
-    super(props);
-    this.state = {
-      content: props.content,
-    };
-  }
-
-  componentWillReceiveProps(props){
-    this.setState({content: props.content});
-  }
-
-  shouldComponentUpdate(nextProps){
-    if(nextProps.content == this.state.content)
-      return false;
-    return true;
-  }
-
-  render(){
-    return (
-      <input
-        value={this.state.content}
-      />
-    );
-  }
-}
-
-class Listener extends React.Component {
+export class Listener extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -48,6 +21,14 @@ class Listener extends React.Component {
     let recognition = new webkitSpeechRecognition();
     recognition.continuous = true;
     recognition.interimResults = true;
+
+    if(this.state.listening) {
+      this.setState({ listening: false});
+      recognition.stop();
+      return;
+    } else {
+      this.setState({ listening: true });
+    }
 
     let final_transcript = '';
     let recognizing = false;
@@ -111,20 +92,14 @@ class Listener extends React.Component {
     }
 
     recognition.start();
-    setInterval(resetVoiceRecog, 10000);
+    setInterval(resetVoiceRecog, 7500);
     ignore_onend = true;
   }
 
   render() {
-    // let lines, states;
-    // for(var i = 0; i < this.state.final.length; i+=10) {
-    //   <Statement statement={this.state.final.substring(i, i+10)} />
-    // }
-
-
-    let lines = ['asldfj', 'asdlkjf', 'alksdjf'];
-    for(var i =0; i<this.state.final.length; i+=1){
-      lines.push(this.state.final.substring(i, i+1  ));
+    let lines = [];
+    for(var i = 0; i < this.state.final.length; i += 80){
+      lines.push(this.state.final.substring(i, i + 80));
     }
     console.log('lines',lines);
     return (
@@ -138,11 +113,21 @@ class Listener extends React.Component {
         </button>
 
         {lines.map((item, i) =>
-          <DummyStatement key={i} content={item} />
+          <Statement key={i} content={item} />
         )}
+
+        <span>{this.state.interim}</span>
       </div>
     );
   }
 }
 
-export default Listener;
+const mapStateToProps = state => ({
+
+});
+
+const mapDispatchToProps = (getState, dispatch) => ({
+
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Listener);
