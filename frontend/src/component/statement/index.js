@@ -2,7 +2,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import * as util from '../../lib/util';
 
-class Statement extends React.Component {
+export class Statement extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -63,5 +63,3 @@ class Statement extends React.Component {
     );
   }
 }
-
-export default Statement;
