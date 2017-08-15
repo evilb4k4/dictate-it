@@ -2,6 +2,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import * as util from '../../lib/util';
 import Statement from '../statement';
+import AceEditor from 'react-ace';
 
 class DummyStatement extends React.Component{
   constructor(props){
@@ -23,9 +24,23 @@ class DummyStatement extends React.Component{
 
   render(){
     return (
-      <input
+      <AceEditor
+        width='100%'
+        onChange={this.props.handleChange}
+        editorProps={{$blockScrolling: true}}
+        setOptions={{
+          wrap: true,
+          maxLines: Infinity,
+          autoScrollEditorIntoView: true,
+          wrapBehavioursEnabled: true,
+          indentedSoftWrap: false,
+          behavioursEnabled: false,
+          showGutter: false,
+          showLineNumbers: false,
+        }}
+
         value={this.state.content}
-        />
+      />
     )
   }
 }
@@ -41,10 +56,18 @@ class Listener extends React.Component {
     };
 
     this.handleStartListening = this.handleStartListening.bind(this);
+    this.hanldeChange = this.handleChange.bind(this);
   }
 
   handleStartListening(event) {
     event.preventDefault();
+    if(this.state.listening) {
+      this.setState({ listening: false});
+      recognition.stop();
+      return;
+    } else {
+      this.setState({ listening: true });
+    }
     let recognition = new webkitSpeechRecognition();
     recognition.continuous = true;
     recognition.interimResults = true;
@@ -111,8 +134,12 @@ class Listener extends React.Component {
     }
 
     recognition.start();
-    setInterval(resetVoiceRecog, 10000);
+    setInterval(resetVoiceRecog, 7500);
     ignore_onend = true;
+  }
+
+  handleChange(event) {
+    this.setState({ final: event.target.value });
   }
 
   render() {
@@ -122,9 +149,9 @@ class Listener extends React.Component {
     // }
 
 
-        let lines = ['asldfj', 'asdlkjf', 'alksdjf']
-        for(var i =0; i<this.state.final.length; i+=1){
-          lines.push(this.state.final.substring(i, i+1  ))
+        let lines = []
+        for(var i =0; i<this.state.final.length; i+=80){
+          lines.push(this.state.final.substring(i, i+80  ))
         }
     console.log('lines',lines)
     return (
@@ -138,8 +165,10 @@ class Listener extends React.Component {
         </button>
 
         {lines.map((item, i) =>
-          <DummyStatement key={i} content={item} />
+          <DummyStatement onChange={this.handleChange} key={i} content={item} />
         )}
+
+        <span>{this.state.interim}</span>
       </div>
     );
   }
