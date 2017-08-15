@@ -12,6 +12,7 @@ import SignupContainer from '../signup-container';
 export class App extends React.Component {
 
   render(){
+  
     return (
       <div className='app'>
         <main>
