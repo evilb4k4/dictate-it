@@ -1,15 +1,14 @@
-export default (state = [], {type, payload}) => {
-  let doc_id, statements;
+export default (state = {}, {type, payload}) => {
+  let id, statements;
   switch(type) {
   case 'STATEMENT_CREATE':
-    doc_id = payload.doc_id;
-    statements = state[doc_id];
-    return {...state, [doc_id]: [...statements, payload] };
+    id = payload.id;
+    return {...state, ...payload };
   case 'STATEMENT_UPDATE':
-    doc_id = payload.doc_id;
-    statements = state[doc_id];
+    id = payload.id;
+    statements = state[id];
     return {...state,
-      [doc_id] : statements.map(statement => statement.id === payload.id ? payload : statement)};
+      [id] : statements.map(statement => statement.id === payload.id ? payload : statement)};
   default:
     return state;
   }
