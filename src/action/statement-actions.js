@@ -19,11 +19,11 @@ export const statementDelete = (statement) => ({
 export const statementFetch = (statement) => ({
   type: 'STATEMENT_FETCH',
   payload: {...statement},
-})
+});
 
 export const statementCreateRequest = (statement) => (dispatch, getState) => {
   let {auth} = getState();
   return superagent.post(`${__API_URL__}/statements`)
     .set('Authorization', `Bearer ${auth}`)
-    .field()
-}
+    .field();
+};
