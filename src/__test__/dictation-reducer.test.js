@@ -12,6 +12,9 @@ describe('testing dictation reducer', () => {
     ];
 
     let result = dictationReducer(mockState, {type: null});
+    
+    util.log(result);
+    
     expect(result).toEqual(mockState);
   });
   test('DICTATION_CREATE should append to the array', () => {

@@ -7,13 +7,52 @@ import {Redirect} from 'react-router';
 
 
 export class LoginContainer extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      username: '',
+      password: '',
+    }
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+  }
+
+  handleSubmit(event) {
+    event.preventDefault();
+    return this.props.login(this.state);
+  }
+
+  handleChange(event) {
+    let {name, value} = event.target;
+    this.setState({ [name]: value });
+  }
+
   render(){
     return(
       <div className='login-container'>
         {util.renderIf(this.props.token,
           <Redirect to='/landing' />
         )}
+        <form onSubmit={this.handleSubmit}>
+          <input
+            required
+            name='username'
+            type='text'
+            placeholder='username'
+            value={this.state.username}
+            onChange={this.handleChange}
+          />
+          <input
+            required
+            name='password'
+            type='password'
+            placeholder='password'
+            value={this.state.password}
+            onChange={this.handleChange}
+          />
 
+          <button type='submit'> Login </button>
+        </form>
       </div>
     );
   }
@@ -21,13 +60,10 @@ export class LoginContainer extends React.Component {
 
 export const mapStateToProps = (state) => ({
   token: state.token,
-  route: state.route,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
-  goToLogin: () => dispatch(route.switchRoute('/login')),
-  goToSignup: () => dispatch(route.switchRoute('/signup')),
-  goToLanding: () => dispatch(route.switchRoute('/landing')),
+  login: user => dispatch(auth.loginRequest(user)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(LoginContainer);

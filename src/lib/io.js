@@ -1,4 +1,5 @@
 import io from 'socket.io-client';
+import * as util from './util';
 
 export const socket = io(`${__API_URL__}`);
 
@@ -15,7 +16,7 @@ export default (store, subscribers) => {
     .map(type => ({type, handler: subscribers[type]}))
     .forEach(subscriber => {
       socket.on(subscriber.type, (payload) => {
-        console.log('__SUBSCRIBE_EVENT__', subscriber.type, payload);
+        util.log('__SUBSCRIBE_EVENT__', subscriber.type, payload);
         try {
           let fakeStore = {
             dispatch: (action) => {
