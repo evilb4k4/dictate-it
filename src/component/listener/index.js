@@ -1,7 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import * as util from '../../lib/util';
-import Statement from '../statement';
 
 import AceEditor from 'react-ace';
 import 'brace/mode/text';
