@@ -22,8 +22,8 @@ export const statementFetch = (statement) => ({
 });
 
 export const statementCreateRequest = (statement) => (dispatch, getState) => {
-  let {auth} = getState();
+  let {token} = getState();
   return superagent.post(`${__API_URL__}/statements`)
-    .set('Authorization', `Bearer ${auth}`)
+    .set('Authorization', `Bearer ${token}`)
     .field();
 };

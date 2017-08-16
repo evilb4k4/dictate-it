@@ -8,12 +8,26 @@ export class Listener extends React.Component {
     super(props);
     this.state = {
       listening: false,
+      title: '',
+      description: '',
       statements: [],
       final: '',
       interim: '',
     };
 
+    this.handleSave = this.handleSave.bind(this);
+    this.handleChange = this.handleChange.bind(this);
     this.handleStartListening = this.handleStartListening.bind(this);
+  }
+
+  handleChange(event) {
+    let {name, value} = event.target;
+    this.setState({ [name]: value });
+  }
+
+  handleSave(event) {
+    event.preventDefault();
+    this.props.onSave(this.state.final);
   }
 
   handleStartListening(event) {
@@ -111,6 +125,12 @@ export class Listener extends React.Component {
         >
           {util.renderIf(!this.state.listening, 'Start Listening')}
           {util.renderIf(this.state.listening, 'Stop Listening')}
+        </button>
+        <button
+          name='save-dictation'
+          onClick={this.handleSave}
+        >
+          Save Dictation
         </button>
 
         {lines.map((item, i) =>
