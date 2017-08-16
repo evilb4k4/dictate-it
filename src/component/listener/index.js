@@ -1,15 +1,16 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import * as util from '../../lib/util';
-import Statement from '../statement';
+
+import AceEditor from 'react-ace';
+import 'brace/mode/text';
+import 'brace/theme/github';
 
 export class Listener extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       listening: false,
-      title: '',
-      description: '',
       statements: [],
       final: '',
       interim: '',
@@ -21,8 +22,13 @@ export class Listener extends React.Component {
   }
 
   handleChange(event) {
-    let {name, value} = event.target;
-    this.setState({ [name]: value });
+    this.setState({ final: event });
+  }
+
+  shouldComponentUpdate(nextProps){
+    if(nextProps.final == this.state.final)
+      return false;
+    return true;
   }
 
   handleSave(event) {
@@ -74,6 +80,7 @@ export class Listener extends React.Component {
     };
     recognition.onresult = function(event) {
       util.log('__onresult');
+      final_transcript = this.state.final;
       var interim_transcript = '\n';
       for (var i = event.resultIndex; i < event.results.length; ++i) {
         if (event.results[i].isFinal) {
@@ -112,11 +119,6 @@ export class Listener extends React.Component {
   }
 
   render() {
-    let lines = [];
-    for(var i = 0; i < this.state.final.length; i += 80){
-      lines.push(this.state.final.substring(i, i + 80));
-    }
-    util.log('lines',lines);
     return (
       <div>
         <button
@@ -133,10 +135,26 @@ export class Listener extends React.Component {
           Save Dictation
         </button>
 
-        {lines.map((item, i) =>
-          <Statement key={i} content={item} />
-        )}
-
+        <AceEditor
+          name='final'
+          mode='text'
+          theme='github'
+          width='100%'
+          onChange={this.handleChange}
+          editorProps={{$blockScrolling: true}}
+          setOptions={{
+            wrap: true,
+            maxLines: Infinity,
+            autoScrollEditorIntoView: true,
+            wrapBehavioursEnabled: true,
+            indentedSoftWrap: false,
+            behavioursEnabled: false,
+            showGutter: false,
+            showLineNumbers: false,
+            fontSize: 15,
+          }}
+          value={this.state.final}
+        />
         <span>{this.state.interim}</span>
       </div>
     );
