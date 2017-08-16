@@ -19,7 +19,7 @@ export class LoginContainer extends React.Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    this.props.login(this.state);
+    return this.props.login(this.state);
   }
 
   handleChange(event) {

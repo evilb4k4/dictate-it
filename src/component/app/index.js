@@ -16,7 +16,7 @@ export class App extends React.Component {
   componentWillMount() {
     let token = util.cookieFetch('Dictation-Token');
     util.log('token', token);
-    if(token !== undefined)
+    if(token && token !== 'undefined')
       this.props.tokenSet(token);
   }
 

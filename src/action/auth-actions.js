@@ -6,11 +6,6 @@ export const tokenSet = (token) => ({
   payload: token,
 });
 
-const login = token => ({
-  type: 'LOGIN',
-  payload: token,
-});
-
 export const logout = () => {
   util.cookieDelete('Dictation-Token');
   return { type: 'LOGOUT' };
@@ -22,9 +17,9 @@ export const loginRequest = user => dispatch =>
     .auth(user.username, user.password)
     .then(res => {
       util.log('res', res)
-      let token = util.cookieCreate('Dictation-Token', res.token, 7);
+      let token = util.cookieCreate('Dictation-Token', res.text, 7);
       if(token)
-        dispatch(login(token));
+        dispatch(tokenSet(token));
       return res;
     })
     .catch(util.logError);
@@ -34,9 +29,9 @@ export const signUpRequest = user => dispatch =>
     .withCredentials()
     .send(user)
     .then(res => {
-      let token = util.cookieCreate('Dictation-Token', res.token, 7);
+      let token = util.cookieCreate('Dictation-Token', res.text, 7);
       if(token)
-        dispatch(login(token));
+        dispatch(tokenSet(token));
       return res;
     })
     .catch(util.logError);
