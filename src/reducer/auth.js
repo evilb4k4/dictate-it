@@ -1,7 +1,7 @@
 export default (state = null, {type, payload}) => {
   switch(type) {
   case 'TOKEN_SET':
-    return payload
+    return payload;
   case 'LOGIN':
     return payload;
   case 'LOGOUT':
