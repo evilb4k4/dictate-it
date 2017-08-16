@@ -63,7 +63,7 @@ export const dictationUpdateRequest = (dictation) => (dispatch, getState) => {
     });
 };
 
-export const dictationFetchRequest = (dictation) => (dispatch, getState) => {
+export const dictationFetchRequest = () => (dispatch, getState) => {
   let {auth} = getState();
   return superagent.get(`${__API_URL__}/dictations/me`)
     .set('Authorization', `Bearer ${auth}`)
