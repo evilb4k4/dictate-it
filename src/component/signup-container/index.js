@@ -5,7 +5,7 @@ import superagent from 'superagent';
 import * as util from '../../lib/util.js';
 import * as auth from '../../action/auth-actions.js';
 import * as route from '../../action/route-actions.js';
-import {Redirect} from 'react-router';
+import {Redirect} from 'react-router-dom';
 import validator from 'validator';
 
 export class SignupContainer extends React.Component {
