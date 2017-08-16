@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import * as util from '../../lib/util';
 import * as auth from '../../action/auth-actions.js';
 import * as route from '../../action/route-actions.js';
-import {Redirect} from 'react-router';
+import {Redirect} from 'react-router-dom';
 
 
 export class LoginContainer extends React.Component {
@@ -12,14 +12,21 @@ export class LoginContainer extends React.Component {
     this.state = {
       username: '',
       password: '',
-    }
+    };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
   }
 
   handleSubmit(event) {
     event.preventDefault();
-    return this.props.login(this.state);
+    return this.props.login(this.state)
+      .then(() => {
+          util.log(this.props.history);
+          util.log(this.props.match);
+          util.log();
+          this.props.history.push('/landing');
+      })
+      .catch(console.error);
   }
 
   handleChange(event) {
