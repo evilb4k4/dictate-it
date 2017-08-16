@@ -12,7 +12,7 @@ describe('testing dictation reducer', () => {
     ];
 
     let result = dictationReducer(mockState, {type: null});
-    console.log(result);
+    util.log(result);
     expect(result).toEqual(mockState);
   });
 });

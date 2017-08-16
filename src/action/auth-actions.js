@@ -1,24 +1,30 @@
 import superagent from 'superagent';
 import * as util from '../lib/util.js';
 
-export const signIn = token => ({
-  type: 'SIGNIN',
+export const tokenSet = (token) => ({
+  type: 'TOKEN_SET',
   payload: token,
 });
 
-export const signOut = () => {
-  util.cookieDelete('Dictation-token');
-  return { type: 'SIGNOUT' };
+const login = token => ({
+  type: 'LOGIN',
+  payload: token,
+});
+
+export const logout = () => {
+  util.cookieDelete('Dictation-Token');
+  return { type: 'LOGOUT' };
 };
 
-export const signInRequest = user => dispatch =>
+export const loginRequest = user => dispatch =>
   superagent.get(`${__API_URL__}/login`)
     .withCredentials()
     .auth(user.username, user.password)
     .then(res => {
-      let token = util.cookieFetch('Dictation-Token');
+      util.log('res', res)
+      let token = util.cookieCreate('Dictation-Token', res.token, 7);
       if(token)
-        dispatch(signIn(token));
+        dispatch(login(token));
       return res;
     })
     .catch(util.logError);
@@ -28,9 +34,9 @@ export const signUpRequest = user => dispatch =>
     .withCredentials()
     .send(user)
     .then(res => {
-      let token = util.cookieFetch('Dictation-Token');
+      let token = util.cookieCreate('Dictation-Token', res.token, 7);
       if(token)
-        dispatch(signIn(token));
+        dispatch(login(token));
       return res;
     })
     .catch(util.logError);

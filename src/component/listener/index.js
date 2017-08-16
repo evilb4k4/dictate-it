@@ -42,24 +42,24 @@ export class Listener extends React.Component {
     };
     recognition.onerror = function(event) {
       if (event.error == 'no-speech') {
-        console.log('__no-speech');
+        util.log('__no-speech');
         ignore_onend = true;
       }
       if (event.error == 'audio-capture') {
-        console.log('__audio-capture');
+        util.log('__audio-capture');
         ignore_onend = true;
       }
       if (event.error == 'not-allowed') {
-        console.log('__not-allowed');
+        util.log('__not-allowed');
         ignore_onend = true;
       }
     };
     recognition.onend = function() {
-      console.log('__onend');
+      util.log('__onend');
       recognition.start();
     };
     recognition.onresult = function(event) {
-      console.log('__onresult');
+      util.log('__onresult');
       var interim_transcript = '\n';
       for (var i = event.resultIndex; i < event.results.length; ++i) {
         if (event.results[i].isFinal) {
@@ -67,11 +67,11 @@ export class Listener extends React.Component {
         } else {
           interim_transcript += `${event.results[i][0].transcript}`;
         }
-        console.log('RESULT', event.results[i][0].transcript);
+        util.log('RESULT', event.results[i][0].transcript);
       }
       final_transcript = capitalize(final_transcript);
       this.setState({final: linebreak(final_transcript), interim: linebreak(interim_transcript)});
-      console.log('__after onresult');
+      util.log('__after onresult');
     };
 
     recognition.onresult = recognition.onresult.bind(this);
@@ -102,7 +102,7 @@ export class Listener extends React.Component {
     for(var i = 0; i < this.state.final.length; i += 80){
       lines.push(this.state.final.substring(i, i + 80));
     }
-    console.log('lines',lines);
+    util.log('lines',lines);
     return (
       <div>
         <button

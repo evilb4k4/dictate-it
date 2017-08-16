@@ -12,9 +12,15 @@ import SignupContainer from '../signup-container';
 import LoginContainer from '../login-container';
 
 export class App extends React.Component {
+
+  componentWillMount() {
+    let token = util.cookieFetch('Dictation-Token');
+    util.log('token', token);
+    if(token !== undefined)
+      this.props.tokenSet(token);
+  }
+
   render(){
-    if(this.props.token)
-      this.props.goToLogin();
     let googleLoginBaseURL='https://accounts.google.com/o/oauth2/v2/auth';
     let googleLoginQuery = querystring.stringify({
       client_id: __GOOGLE_CLIENT_ID__,
@@ -35,17 +41,18 @@ export class App extends React.Component {
                 <p>
                   <Link to='/landing'>Home</Link>
                   <Link to='/dictation'>New Dictation</Link>
+                  <button onClick={this.props.logout}>Logout</button>
                 </p>
               )}
               {util.renderIf(!this.props.token,
                 <p>
-                  <Link to='/login'>Login</Link>
+                  <Link to='/'>Login</Link>
                   <a href={googleLoginURL}>Login with Google</a>
                   <Link to='/signup'>Sign Up</Link>
                 </p>
               )}
             </header>
-            <Route exact path='/login' component={LoginContainer} />
+            <Route exact path='/' component={LoginContainer} />
             <Route exact path='/signup' component={SignupContainer} />
             <Route exact path='/landing' component={LandingContainer} />
             <Route exact path='/dictation' component={Dictation} />
@@ -62,11 +69,8 @@ let mapStateToProps = (state) => ({
 });
 
 let mapDispatchToProps = (dispatch) => ({
-  login: (token) => dispatch(auth.login(token)),
-  goToLogin: () => dispatch(route.switchRoute('/login')),
-  goToSignup: () => dispatch(route.switchRoute('/signup')),
-  goToLanding: () => dispatch(route.switchRoute('/landing')),
-  goToNewDictation: () => dispatch(route.switchRoute('/dictation')),
+  logout: () => dispatch(auth.logout()),
+  tokenSet: token => dispatch(auth.tokenSet(token)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
