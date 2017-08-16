@@ -16,10 +16,9 @@ export const loginRequest = user => dispatch =>
     .withCredentials()
     .auth(user.username, user.password)
     .then(res => {
-      util.log('res', res)
-      let token = util.cookieCreate('Dictation-Token', res.text, 7);
-      if(token)
-        dispatch(tokenSet(token));
+      util.cookieCreate('Dictation-Token', res.text, 7);
+      if(res.text)
+        dispatch(tokenSet(res.text));
       return res;
     })
     .catch(util.logError);
@@ -29,9 +28,9 @@ export const signUpRequest = user => dispatch =>
     .withCredentials()
     .send(user)
     .then(res => {
-      let token = util.cookieCreate('Dictation-Token', res.text, 7);
-      if(token)
-        dispatch(tokenSet(token));
+      util.cookieCreate('Dictation-Token', res.text, 7);
+      if(res.text)
+        dispatch(tokenSet(res.text));
       return res;
     })
     .catch(util.logError);

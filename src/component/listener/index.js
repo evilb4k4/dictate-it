@@ -24,7 +24,7 @@ export class Listener extends React.Component {
     recognition.interimResults = true;
 
     if(this.state.listening) {
-      this.setState({ listening: false});
+      this.setState({ listening: false });
       recognition.stop();
       return;
     } else {

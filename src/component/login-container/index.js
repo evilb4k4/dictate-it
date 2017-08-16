@@ -12,7 +12,7 @@ export class LoginContainer extends React.Component {
     this.state = {
       username: '',
       password: '',
-    }
+    };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
   }
@@ -20,15 +20,13 @@ export class LoginContainer extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
     return this.props.login(this.state)
-      .then(res => {
-        if(res) {
+      .then(() => {
           util.log(this.props.history);
           util.log(this.props.match);
+          util.log();
           this.props.history.push('/landing');
-        }
-        else
-          this.setState({ username: '', password: '' });
-      });
+      })
+      .catch(console.error);
   }
 
   handleChange(event) {
