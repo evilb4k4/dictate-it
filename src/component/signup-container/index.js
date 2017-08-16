@@ -28,7 +28,7 @@ export class SignupContainer extends React.Component {
   handleSubmit(e){
     e.preventDefault();
     if(!this.state.usernameError && !this.state.emailError && !this.state.passwordError){
-      console.log('åæææææææå');
+      util.log('åæææææææå');
       return this.props.signup({
         email: this.state.email,
         username: this.state.username,
@@ -37,7 +37,7 @@ export class SignupContainer extends React.Component {
     }
   }
 
-  handleChange(e) {
+  handleChange(event) {
     let {name, value} = event.target;
     this.setState({ [name]: value });
   }
@@ -50,6 +50,7 @@ export class SignupContainer extends React.Component {
         )}
         <form onSubmit={this.handleSubmit}>
           <input
+            required
             name='email'
             type='email'
             placeholder='email'
@@ -58,6 +59,7 @@ export class SignupContainer extends React.Component {
           />
 
           <input
+            required
             name='username'
             type='text'
             placeholder='username'
@@ -65,6 +67,7 @@ export class SignupContainer extends React.Component {
             onChange={this.handleChange}
           />
           <input
+            required
             name='password'
             type='password'
             placeholder='password'
@@ -84,8 +87,7 @@ export const mapStateToProps = (state) => ({
 });
 
 export const mapDispatchToProps = (dispatch) => ({
-  signup: (user) => dispatch(auth.signupRequest(user)),
-  goToLanding: () => dispatch(route.swichRoute('/landing')),
+  signup: (user) => dispatch(auth.signUpRequest(user)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SignupContainer);
