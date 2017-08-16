@@ -3,6 +3,14 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
+  "jest": {
+    "globals": {
+      "__DEBUG__": false,
+      "process.env": {
+        "NODE_ENV": "testing"
+      }
+    }
+  },
   "scripts": {
     "test": "jest",
     "lint": "eslint . --fix",

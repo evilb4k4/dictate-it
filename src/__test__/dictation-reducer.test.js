@@ -1,4 +1,5 @@
 import dictationReducer from '../reducer/dictation.js';
+import * as util from '../lib/util.js';
 
 describe('testing dictation reducer', () => {
   test('inital state should be an empty array', () =>{
@@ -12,9 +13,8 @@ describe('testing dictation reducer', () => {
     ];
 
     let result = dictationReducer(mockState, {type: null});
-    
     util.log(result);
-    
+
     expect(result).toEqual(mockState);
   });
   test('DICTATION_CREATE should append to the array', () => {

@@ -21,10 +21,10 @@ export class LoginContainer extends React.Component {
     event.preventDefault();
     return this.props.login(this.state)
       .then(() => {
-          util.log(this.props.history);
-          util.log(this.props.match);
-          util.log();
-          this.props.history.push('/landing');
+        util.log(this.props.history);
+        util.log(this.props.match);
+        util.log();
+        this.props.history.push('/landing');
       })
       .catch(console.error);
   }

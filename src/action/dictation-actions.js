@@ -38,12 +38,15 @@ export const dictationFetch = (dictation) => ({
 export const dictationReset = () => ({type: 'DICTATION_RESET'});
 
 export const dictationCreateRequest = (dictation) => (dispatch, getState) => {
-  let {auth} = getState();
-  return superagent.post(`${__API_URL__}/dictations`)
-    .set('Authorization', `Bearer ${auth}`)
-    .field('description', dictation.description)
-    .field('title', dictation.title)
-    .field('public', dictation.public)
+  let {token} = getState();
+  return superagent.post(`${__API_URL__}/dictations/create`)
+    .set('Authorization', `Bearer ${token}`)
+    .send({
+      description: dictation.description,
+      title: dictation.title,
+      body: dictation.body,
+    })
+    // .field('public', dictation.public)
     .then(res => {
       dispatch(dictationCreate(res.body));
       return res;
@@ -51,9 +54,9 @@ export const dictationCreateRequest = (dictation) => (dispatch, getState) => {
 };
 
 export const dictationUpdateRequest = (dictation) => (dispatch, getState) => {
-  let {auth} = getState();
+  let {token} = getState();
   return superagent.put(`${__API_URL__}/dictations/${dictation._id}`)
-    .set('Authorization', `Bearer ${auth}`)
+    .set('Authorization', `Bearer ${token}`)
     .field('description', dictation.description)
     .field('title', dictation.title)
     .field('public', dictation.public)
@@ -64,9 +67,10 @@ export const dictationUpdateRequest = (dictation) => (dispatch, getState) => {
 };
 
 export const dictationFetchRequest = () => (dispatch, getState) => {
-  let {auth} = getState();
+  let {token} = getState();
+
   return superagent.get(`${__API_URL__}/dictations/me`)
-    .set('Authorization', `Bearer ${auth}`)
+    .set('Authorization', `Bearer ${token}`)
     .then(res => {
       dispatch(dictationFetch(res.body.data));
       return res;
@@ -74,9 +78,9 @@ export const dictationFetchRequest = () => (dispatch, getState) => {
 };
 
 export const dictationDeleteRequest = (dictation) => (dispatch, getState) => {
-  let {auth} = getState();
+  let {token} = getState();
   return superagent.delete(`${__API_URL__}/dictations/${dictation._id}`)
-    .set('Authorization', `Bearer ${auth}`)
+    .set('Authorization', `Bearer ${token}`)
     .then(res => {
       dispatch(dictationDelete(dictation));
     });
