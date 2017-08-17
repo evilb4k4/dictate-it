@@ -30,6 +30,7 @@ export class App extends React.Component {
     });
 
     let googleLoginURL = `${googleLoginBaseURL}?${googleLoginQuery}`;
+
     return (
       <div className='app'>
         <BrowserRouter>

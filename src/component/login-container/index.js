@@ -64,9 +64,9 @@ export class LoginContainer extends React.Component {
           />
 
           <MuiThemeProvider>
-          <div class='login-submit'>
-          <RaisedButton type='submit' label="Submit" fullWidth={true} />
-          </div>
+            <div className='login-submit'>
+              <RaisedButton type='submit' label="Submit" fullWidth={true} />
+            </div>
           </MuiThemeProvider>
 
         </form>
