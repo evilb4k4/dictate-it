@@ -4,7 +4,6 @@ describe('testing auth reducer', () => {
   it('testing TOKEN_SET should return a token', () =>{
     let token = authReducer(null, {type:null});
     expect(token).toEqual(null);
-    console.log(token);
   });
   test('testing LOGIN should return with token', () => {
     let actionOne = {
@@ -17,7 +16,6 @@ describe('testing auth reducer', () => {
     let state = authReducer(null, actionOne);
     expect(state).toBe(actionOne.payload);
     expect(state.username).toEqual(actionOne.payload.username);
-    console.log(state.username);
 
   });
   test('testing LOGOUT should return with token', () => {
@@ -27,7 +25,6 @@ describe('testing auth reducer', () => {
     };
     let state = authReducer(null, actionOne);
     expect(null).toBe(actionOne.payload);
-    console.log(state);
 
   });
 });
