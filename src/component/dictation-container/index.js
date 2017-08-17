@@ -1,7 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {Redirect} from 'react-router-dom';
-import {dictationFetchRequest} from '../../action/dictation-actions.js';
+import {Link, Redirect} from 'react-router-dom';
+import {dictationFetchAllRequest} from '../../action/dictation-actions.js';
 import * as util from '../../lib/util';
 
 export class DictationContainer extends React.Component {
@@ -10,7 +10,7 @@ export class DictationContainer extends React.Component {
   }
 
   componentWillMount() {
-    this.props.getDictations()
+    this.props.getAllDictations()
       .catch(err => util.logError(err));
   }
 
@@ -20,11 +20,20 @@ export class DictationContainer extends React.Component {
         {util.renderIf(!this.props.token,
           <Redirect to='/' />
         )}
+        <thead>
+          <tr>
+            <th colSpan={2}>All Public Dictations</th>
+          </tr>
+        </thead>
         <tbody>
           {this.props.dictations.map((dictation, i) =>
             <tr key={i}>
-              <td>{dictation.title}</td>
-              <td>{dictation.description}</td>
+              <td>
+                <Link to={`/dictation/${dictation._id}`}>{dictation.title}</Link>
+              </td>
+              <td>
+                {dictation.description}
+              </td>
             </tr>
           )}
         </tbody>
@@ -39,7 +48,7 @@ export const mapStateToProps = (state) => ({
 });
 
 export const mapDispatchToProps = (dispatch) => ({
-  getDictations: () => dispatch(dictationFetchRequest()),
+  getAllDictations: () => dispatch(dictationFetchAllRequest()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(DictationContainer);

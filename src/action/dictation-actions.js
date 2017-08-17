@@ -67,10 +67,20 @@ export const dictationUpdateRequest = (dictation) => (dispatch, getState) => {
     });
 };
 
-export const dictationFetchRequest = () => (dispatch, getState) => {
+export const dictationFetchAllRequest = () => (dispatch, getState) => {
   let {token} = getState();
 
   return superagent.get(`${__API_URL__}/dictations`)
+    .set('Authorization', `Bearer ${token}`)
+    .then(res => {
+      dispatch(dictationFetch(res.body));
+      return res;
+    });
+};
+
+export const dictationFetchOneRequest = id => (dispatch, getState) => {
+  let {token} = getState();
+  return superagent.get(`${__API_URL__}/dictations/${id}`)
     .set('Authorization', `Bearer ${token}`)
     .then(res => {
       dispatch(dictationFetch(res.body));

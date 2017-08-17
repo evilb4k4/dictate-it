@@ -3,65 +3,73 @@ import {connect} from 'react-redux';
 import Listener from '../listener';
 import * as util from '../../lib/util';
 import {Redirect} from 'react-router-dom';
-import {dictationCreateRequest} from '../../action/dictation-actions.js';
+import {dictationCreateRequest, dictationFetchOneRequest} from '../../action/dictation-actions.js';
 
 export class Dictation extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      title: '',
-      description: '',
-    };
 
     this.handleSave = this.handleSave.bind(this);
     this.handleChange = this.handleChange.bind(this);
   }
 
+  componentWillMount() {
+    let id = this.props.history.location.pathname.split('/')[2];
+
+  }
+
   handleChange(event) {
     let {name, value} = event.target;
-    this.setState({ [name]: value });
+    this.setState({ dictation: { [name]: value }});
   }
 
   handleSave(body) {
-    let dictation = {
-      body,
-      title: this.state.title,
-      description: this.state.description,
-    };
-    this.props.dictationCreate(dictation);
+    this.props.dictationCreate(body);
   }
 
   render() {
+    let current = {};
+    try {
+      let id = this.props.history.location.pathname.split('/')[2];
+      if(this.props.dictations) {
+        this.props.dictations.forEach(dictation => {
+          if(dictation._id === id)
+            current = dictation;
+        });
+      }
+    } catch(err) {
+
+    }
     return (
       <div className="live-dictation">
         {util.renderIf(!this.props.token,
           <Redirect to='/' />
         )}
-        {util.renderIf(this.state.title,
-          <h2>{this.state.title}</h2>
+        {util.renderIf(current.title,
+          <h2>{current.title}</h2>
         )}
-        {util.renderIf(!this.state.title,
+        {util.renderIf(!current.title,
           <input
             type='text'
             name='title'
             onChange={this.handleChange}
-            value={this.state.title}
+            value={current.title}
             placeholder='Title'
           />
         )}
-        {util.renderIf(this.state.description,
-          <p>{this.state.description}</p>
+        {util.renderIf(current.description,
+          <p>{current.description}</p>
         )}
-        {util.renderIf(!this.state.description,
+        {util.renderIf(!current.description,
           <input
             type='text'
             name='description'
             onChange={this.handleChange}
-            value={this.state.description}
+            value={current.description}
             placeholder='Description'
           />
         )}
-        <Listener onSave={this.handleSave} />
+        <Listener dictation={current} onSave={this.handleSave} />
       </div>
     );
   }
@@ -69,6 +77,7 @@ export class Dictation extends React.Component {
 
 export const mapStateToProps = (state) => ({
   token: state.token,
+  dictations: state.dictations,
 });
 
 export const mapDispatchToProps = (dispatch) => ({

@@ -55,6 +55,7 @@ export class App extends React.Component {
             <Route exact path='/signup' component={SignupContainer} />
             <Route exact path='/landing' component={LandingContainer} />
             <Route exact path='/dictation' component={Dictation} />
+            <Route exact path='/dictation/*' component={Dictation} />
           </main>
         </BrowserRouter>
       </div>
