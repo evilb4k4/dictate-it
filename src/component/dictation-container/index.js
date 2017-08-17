@@ -6,45 +6,40 @@ import * as util from '../../lib/util';
 
 export class DictationContainer extends React.Component {
   constructor(props){
-    super(props)
-    this.state = {
-      dictations: [],
-    };
+    super(props);
+  }
+
+  componentWillMount() {
+    this.props.getDictations()
+      .catch(err => util.logError(err));
+  }
+
+  render() {
+    return (
+      <table className="dictation-container">
+        {util.renderIf(!this.props.token,
+          <Redirect to='/' />
+        )}
+        <tbody>
+          {this.props.dictations.map((dictation, i) =>
+            <tr key={i}>
+              <td>{dictation.title}</td>
+              <td>{dictation.description}</td>
+            </tr>
+          )}
+        </tbody>
+      </table>
+    );
   }
 }
 
-  componentWillMount(){
-    this.props.dictationFetchRequest()
-    .then(dictations) => {
-      this.setState({dictations});
-    });
-  }
-
-render() {
-  return (
-    <div className="dictation-container">
-    {util.renderIf(!this.props.token,
-        <Redirect to='/' />
-    )}
-    {this.state.dictations.map(dictation) => {
-      return
-      <p>
-      {dictation.title}
-      {dictation.description}
-      </p>
-    }
-  }
-    </div>
-
-  )
-}
-
-export const mapStateToProps = (states) => ({
+export const mapStateToProps = (state) => ({
   token: state.token,
+  dictations: state.dictations
 });
 
 export const mapDispatchToProps = (dispatch) => ({
-  dictation: (user) => dispatch(auth.dictationFetchRequest(user)),
+  getDictations: () => dispatch(dictationFetchRequest()),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(SignupContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(DictationContainer);

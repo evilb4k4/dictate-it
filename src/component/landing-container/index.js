@@ -4,6 +4,8 @@ import * as querystring from 'querystring';
 import * as util from '../../lib/util';
 import {Redirect} from 'react-router-dom';
 
+import DictationContainer from '../dictation-container';
+
 export class LandingContainer extends React.Component {
   render(){
     return (
@@ -11,6 +13,7 @@ export class LandingContainer extends React.Component {
         {util.renderIf(!this.props.token,
           <Redirect to='/' />
         )}
+        <DictationContainer />
       </div>
     );
   }
