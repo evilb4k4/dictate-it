@@ -11,14 +11,19 @@ export class Listener extends React.Component {
     super(props);
     this.state = {
       listening: false,
-      statements: [],
-      final: '',
+      final: props.dictation.body ? props.dictation.body : '',
       interim: '',
     };
 
     this.handleSave = this.handleSave.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleStartListening = this.handleStartListening.bind(this);
+  }
+
+  componentWillReceiveProps(props) {
+    console.log('PROPS', props);
+    if(props.dictation.body)
+      this.setState({ final: props.dictation.body });
   }
 
   handleChange(event) {
@@ -51,11 +56,10 @@ export class Listener extends React.Component {
       this.setState({ listening: true });
     }
 
-    let final_transcript = '';
+    let final_transcript = this.state.final;
     let recognizing = false;
     let ignore_onend;
     let start_timestamp;
-    let statements = [];
 
     recognition.onstart = function() {
       recognizing = true;
@@ -162,7 +166,7 @@ export class Listener extends React.Component {
 }
 
 const mapStateToProps = state => ({
-
+  dictation: state.dictations
 });
 
 const mapDispatchToProps = (getState, dispatch) => ({
