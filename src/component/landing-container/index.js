@@ -11,7 +11,6 @@ export class LandingContainer extends React.Component {
         {util.renderIf(!this.props.token,
           <Redirect to='/' />
         )}
-
       </div>
     );
   }
