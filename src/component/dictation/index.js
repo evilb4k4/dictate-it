@@ -27,7 +27,7 @@ export class Dictation extends React.Component {
         });
       }
     } catch(err) {
-
+      util.logError(err);
     }
     return (
       <div className="live-dictation">
