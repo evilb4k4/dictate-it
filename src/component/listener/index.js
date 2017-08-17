@@ -124,7 +124,7 @@ export class Listener extends React.Component {
         <button
           name='listener'
           onClick={this.handleStartListening}
-        >
+          >
           {util.renderIf(!this.state.listening, 'Start Listening')}
           {util.renderIf(this.state.listening, 'Stop Listening')}
         </button>

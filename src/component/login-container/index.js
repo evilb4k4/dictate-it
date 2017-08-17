@@ -3,6 +3,9 @@ import {connect} from 'react-redux';
 import * as util from '../../lib/util';
 import * as auth from '../../action/auth-actions.js';
 import {Redirect} from 'react-router-dom';
+import RaisedButton from 'material-ui/RaisedButton';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+
 
 
 export class LoginContainer extends React.Component {
@@ -34,12 +37,15 @@ export class LoginContainer extends React.Component {
   }
 
   render(){
+    const style = {
+
+    };
     return(
       <div className='login-container'>
         {util.renderIf(this.props.token,
           <Redirect to='/landing' />
         )}
-        <form onSubmit={this.handleSubmit}>
+        <form className='login-form' onSubmit={this.handleSubmit}>
           <input
             required
             name='username'
@@ -57,7 +63,12 @@ export class LoginContainer extends React.Component {
             onChange={this.handleChange}
           />
 
-          <button type='submit'> Login </button>
+          <MuiThemeProvider>
+          <div class='login-submit'>
+          <RaisedButton type='submit' label="Submit" fullWidth={true} />
+          </div>
+          </MuiThemeProvider>
+
         </form>
       </div>
     );
