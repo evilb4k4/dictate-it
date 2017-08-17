@@ -92,9 +92,15 @@ let googleLoginURL = `${googleLoginBaseURL}?${googleLoginQuery}`;
             onChange={this.handleChange}
           />
           <MuiThemeProvider>
+<<<<<<< HEAD
           <div className='login-submit'>
           <RaisedButton type='submit' label="Submit" fullWidth={true} />
           </div>
+=======
+            <div className='login-submit'>
+              <RaisedButton type='submit' label="Submit" fullWidth={true} />
+            </div>
+>>>>>>> f3975072f5407e1b63d264bf1d4d2b0ffb316ec1
           </MuiThemeProvider>
         </form>
       </div>
