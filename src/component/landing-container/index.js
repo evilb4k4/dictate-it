@@ -1,6 +1,5 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import * as route from '../../action/route-actions.js';
 import * as querystring from 'querystring';
 import * as util from '../../lib/util';
 import {Redirect} from 'react-router-dom';

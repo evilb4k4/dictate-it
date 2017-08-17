@@ -2,7 +2,6 @@ import React from 'react';
 import {connect} from 'react-redux';
 import * as util from '../../lib/util';
 import * as auth from '../../action/auth-actions.js';
-import * as route from '../../action/route-actions.js';
 import {Redirect} from 'react-router-dom';
 
 
