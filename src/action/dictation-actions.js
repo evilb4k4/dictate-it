@@ -36,11 +36,6 @@ export const dictationFetch = (dictations) => ({
   payload: dictations,
 });
 
-export const dictationMine = (dictations) => ({
-  type: 'DICTATION_MINE',
-  payload: dictations,
-});
-
 export const dictationReset = () => ({type: 'DICTATION_RESET'});
 
 export const dictationCreateRequest = (dictation) => (dispatch, getState) => {
@@ -80,16 +75,6 @@ export const dictationFetchAllRequest = () => (dispatch, getState) => {
     .set('Authorization', `Bearer ${token}`)
     .then(res => {
       dispatch(dictationFetch(res.body));
-      return res;
-    });
-};
-
-export const dictationMineRequest = () => (dispatch, getState) => {
-  let {token} = getState();
-  return superagent.get(`${__API_URL__}/dictations/me`)
-    .set('Authorization', `Bearer ${token}`)
-    .then(res => {
-      dispatch(dictationMine(res.body));
       return res;
     });
 };
