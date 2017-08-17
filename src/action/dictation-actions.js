@@ -1,5 +1,6 @@
 import uuid from 'uuid/v1';
 import superagent from 'superagent';
+import * as util from '../lib/util';
 
 export const dictationCreate = (dictation) => {
   dictation.id = uuid();
@@ -30,9 +31,9 @@ export const dictationDelete = (dictation) => ({
   payload: dictation,
 });
 
-export const dictationFetch = (dictation) => ({
+export const dictationFetch = (dictations) => ({
   type: 'DICTATION_FETCH',
-  payload: dictation,
+  payload: dictations,
 });
 
 export const dictationReset = () => ({type: 'DICTATION_RESET'});
@@ -69,10 +70,10 @@ export const dictationUpdateRequest = (dictation) => (dispatch, getState) => {
 export const dictationFetchRequest = () => (dispatch, getState) => {
   let {token} = getState();
 
-  return superagent.get(`${__API_URL__}/dictations/me`)
+  return superagent.get(`${__API_URL__}/dictations`)
     .set('Authorization', `Bearer ${token}`)
     .then(res => {
-      dispatch(dictationFetch(res.body.data));
+      dispatch(dictationFetch(res.body));
       return res;
     });
 };
