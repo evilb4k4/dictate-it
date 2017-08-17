@@ -3,6 +3,8 @@ import {connect} from 'react-redux';
 import * as util from '../../lib/util';
 import {Redirect} from 'react-router-dom';
 import AceEditor from 'react-ace';
+import {dictationCreateRequest} from '../../action/dictation-actions.js';
+
 import 'brace/mode/text';
 import 'brace/theme/github';
 
@@ -13,6 +15,8 @@ export class Listener extends React.Component {
       listening: false,
       final: props.dictation ? props.dictation.body : '',
       interim: '',
+      title: props.dictation ? props.dictation.title : '',
+      description: props.dictation ? props.dictation.description : '',
     };
 
     this.handleSave = this.handleSave.bind(this);
@@ -21,7 +25,13 @@ export class Listener extends React.Component {
   }
 
   handleChange(event) {
-    this.setState({ final: event });
+    if(event.target) {
+      let {name, value} = event.target;
+      this.setState({ [name]: value });
+    }
+    else {
+      this.setState({ final: event });
+    }
   }
 
   shouldComponentUpdate(nextProps){
@@ -32,11 +42,22 @@ export class Listener extends React.Component {
 
   handleSave(event) {
     event.preventDefault();
-    let newDict = {
-      ...this.props.dictation,
-      body: this.state.final,
-    };
-    this.props.onSave(newDict);
+    util.log(this.props.dictation);
+    let newDict;
+    if(this.props.dictation && Object.keys(this.props.dictation).length !== 0) {
+      newDict = {
+        ...this.props.dictation,
+        body: this.state.final,
+      };
+      util.log('new dict', newDict)
+    } else {
+      newDict = {
+        title: this.state.title,
+        description: this.state.description,
+        body: this.state.final,
+      };
+    }
+    this.props.dictationCreate(newDict);
   }
 
   handleStartListening(event) {
@@ -90,8 +111,11 @@ export class Listener extends React.Component {
         }
         util.log('RESULT', event.results[i][0].transcript);
       }
-      final_transcript = capitalize(final_transcript);
-      this.setState({final: linebreak(final_transcript), interim: linebreak(interim_transcript)});
+      try {
+        final_transcript = capitalize(final_transcript);
+      } catch(err) {
+      }
+      this.setState({final: final_transcript, interim: interim_transcript});
       util.log('__after onresult');
     };
 
@@ -100,13 +124,6 @@ export class Listener extends React.Component {
 
     function resetVoiceRecog() {
       recognition.stop();
-    }
-
-    let two_line = /\n\n/g;
-    let one_line = /\n/g;
-
-    function linebreak(s) {
-      return s.replace(two_line, '<p></p>');
     }
 
     let first_char = /\S/;
@@ -124,6 +141,30 @@ export class Listener extends React.Component {
       <div>
         {util.renderIf(!this.props.token,
           <Redirect to='/' />
+        )}
+        {util.renderIf(this.state.title,
+          <h2>{this.state.title}</h2>
+        )}
+        {util.renderIf(!this.state.title,
+          <input
+            type='text'
+            name='title'
+            onChange={this.handleChange}
+            value={this.state.title}
+            placeholder='Title'
+          />
+        )}
+        {util.renderIf(this.state.description,
+          <p>{this.state.description}</p>
+        )}
+        {util.renderIf(!this.state.description,
+          <input
+            type='text'
+            name='description'
+            onChange={this.handleChange}
+            value={this.state.description}
+            placeholder='Description'
+          />
         )}
         <button
           name='listener'
@@ -170,7 +211,7 @@ export const mapStateToProps = (state) => ({
 });
 
 export const mapDispatchToProps = (dispatch) => ({
-
+  dictationCreate: dictation => dispatch(dictationCreateRequest(dictation)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Listener);

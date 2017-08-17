@@ -26,7 +26,7 @@ if (production)
 module.exports = {
   plugins,
   entry: `${__dirname}/src/main.js`,
-  devServer: { historyApiFallback: true  },
+  devServer: { historyApiFallback: true },
   devtool: production ? undefined : 'cheap-module-eval-source-map',
   output: {
     path: `${__dirname}/build`,
