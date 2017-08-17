@@ -55,13 +55,7 @@ let googleLoginURL = `${googleLoginBaseURL}?${googleLoginQuery}`;
       <div className='login-container'>
       <header>
         <h1> Dictate It! </h1>
-        {util.renderIf(this.props.token,
-          <p>
-            <Link to='/landing'>Home</Link>
-            <Link to='/dictation'>New Dictation</Link>
-            <button onClick={this.props.logout}>Logout</button>
-          </p>
-        )}
+      
         {util.renderIf(!this.props.token,
           <p>
             <Link to='/'>Login</Link>
@@ -92,15 +86,9 @@ let googleLoginURL = `${googleLoginBaseURL}?${googleLoginQuery}`;
             onChange={this.handleChange}
           />
           <MuiThemeProvider>
-<<<<<<< HEAD
-          <div className='login-submit'>
-          <RaisedButton type='submit' label="Submit" fullWidth={true} />
-          </div>
-=======
             <div className='login-submit'>
               <RaisedButton type='submit' label="Submit" fullWidth={true} />
             </div>
->>>>>>> f3975072f5407e1b63d264bf1d4d2b0ffb316ec1
           </MuiThemeProvider>
         </form>
       </div>

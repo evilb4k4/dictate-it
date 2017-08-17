@@ -39,7 +39,7 @@ let mapStateToProps = (state) => ({
 });
 
 let mapDispatchToProps = (dispatch) => ({
-  logout: () => dispatch(auth.logout()),
+  
   tokenSet: token => dispatch(auth.tokenSet(token)),
 });
 
