@@ -94,11 +94,11 @@ export const dictationMineRequest = () => (dispatch, getState) => {
     });
 };
 
-export const dictationDeleteRequest = (dictation) => (dispatch, getState) => {
+export const dictationDeleteRequest = (id) => (dispatch, getState) => {
   let {token} = getState();
-  return superagent.delete(`${__API_URL__}/dictations/${dictation._id}`)
+  return superagent.delete(`${__API_URL__}/dictations/${id}`)
     .set('Authorization', `Bearer ${token}`)
     .then(res => {
-      dispatch(dictationDelete(dictation));
+      dispatch(dictationDelete(res.body));
     });
 };

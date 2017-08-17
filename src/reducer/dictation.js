@@ -16,7 +16,7 @@ export default (state = initialState, action) => {
     return state.map(dictation =>
       dictation.id == payload.id ? payload : dictation);
   case 'DICTATION_DELETE':
-    return state.filter(dictation => dictation.id !== payload.id);
+    return state.filter(dictation => dictation._id !== payload);
   case 'DICTATION_RESET':
     return initialState;
   default:
