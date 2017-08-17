@@ -4,7 +4,6 @@ import * as querystring from 'querystring';
 import {BrowserRouter, Link, Route} from 'react-router-dom';
 import * as util from '../../lib/util.js';
 import * as auth from '../../action/auth-actions.js';
-import * as route from '../../action/route-actions.js';
 
 import Dictation from '../dictation';
 import LandingContainer from '../landing-container';
@@ -65,7 +64,6 @@ export class App extends React.Component {
 
 let mapStateToProps = (state) => ({
   token: state.token,
-  route: state.route,
 });
 
 let mapDispatchToProps = (dispatch) => ({
