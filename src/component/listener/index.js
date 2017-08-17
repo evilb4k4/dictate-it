@@ -1,7 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import * as util from '../../lib/util';
-
+import {Redirect} from 'react-router-dom';
 import AceEditor from 'react-ace';
 import 'brace/mode/text';
 import 'brace/theme/github';
@@ -11,19 +11,13 @@ export class Listener extends React.Component {
     super(props);
     this.state = {
       listening: false,
-      final: props.dictation.body ? props.dictation.body : '',
+      final: props.dictation ? props.dictation.body : '',
       interim: '',
     };
 
     this.handleSave = this.handleSave.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleStartListening = this.handleStartListening.bind(this);
-  }
-
-  componentWillReceiveProps(props) {
-    console.log('PROPS', props);
-    if(props.dictation.body)
-      this.setState({ final: props.dictation.body });
   }
 
   handleChange(event) {
@@ -38,7 +32,11 @@ export class Listener extends React.Component {
 
   handleSave(event) {
     event.preventDefault();
-    this.props.onSave(this.state.final);
+    let newDict = {
+      ...this.props.dictation,
+      body: this.state.final,
+    };
+    this.props.onSave(newDict);
   }
 
   handleStartListening(event) {
@@ -48,15 +46,9 @@ export class Listener extends React.Component {
     recognition.continuous = true;
     recognition.interimResults = true;
 
-    if(this.state.listening) {
-      this.setState({ listening: false });
-      recognition.stop();
-      return;
-    } else {
-      this.setState({ listening: true });
-    }
+    this.setState({ listening: this.state.listening ? false : true });
 
-    let final_transcript = this.state.final;
+    let final_transcript;
     let recognizing = false;
     let ignore_onend;
     let start_timestamp;
@@ -80,6 +72,10 @@ export class Listener extends React.Component {
     };
     recognition.onend = function() {
       util.log('__onend');
+      if(!this.state.listening) {
+        recognition = null;
+        return;
+      }
       recognition.start();
     };
     recognition.onresult = function(event) {
@@ -100,6 +96,7 @@ export class Listener extends React.Component {
     };
 
     recognition.onresult = recognition.onresult.bind(this);
+    recognition.onend = recognition.onend.bind(this);
 
     function resetVoiceRecog() {
       recognition.stop();
@@ -125,6 +122,9 @@ export class Listener extends React.Component {
   render() {
     return (
       <div>
+        {util.renderIf(!this.props.token,
+          <Redirect to='/' />
+        )}
         <button
           name='listener'
           onClick={this.handleStartListening}
@@ -165,11 +165,11 @@ export class Listener extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({
-  dictation: state.dictations
+export const mapStateToProps = (state) => ({
+  token: state.token,
 });
 
-const mapDispatchToProps = (getState, dispatch) => ({
+export const mapDispatchToProps = (dispatch) => ({
 
 });
 
