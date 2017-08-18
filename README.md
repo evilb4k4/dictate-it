@@ -1,4 +1,4 @@
-# dictate-it
+# Dictate it!
 
 ![Build Status](https://travis-ci.org/SpenGietz/dictate-it.svg?branch=master)
 
