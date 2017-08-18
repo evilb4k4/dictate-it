@@ -1,8 +1,12 @@
 import React from 'react';
+import AceEditor from 'react-ace';
 import {connect} from 'react-redux';
 import * as util from '../../lib/util';
 import {Redirect} from 'react-router-dom';
-import AceEditor from 'react-ace';
+import TextField from 'material-ui/TextField';
+import IconButton from 'material-ui/IconButton';
+import RaisedButton from 'material-ui/RaisedButton';
+import Recorder from 'material-ui/svg-icons/hardware/keyboard-voice';
 import {dictationCreateRequest, dictationUpdateRequest} from '../../action/dictation-actions.js';
 
 import 'brace/mode/text';
@@ -135,65 +139,98 @@ export class Listener extends React.Component {
   }
 
   render() {
+
+    const style = {
+      largeIcon: {
+        width: 60,
+        height: 60,
+      },
+      large: {
+        width: 120,
+        height: 120,
+        padding: 30,
+      },
+      card: {
+        height: '350px',
+        width: '275px',
+        margin: '0 auto',
+        textAlign: 'center',
+        marginTop: '75px',
+      },
+      inputs: {
+        width: '50%',
+        margin: '0 auto',
+      },
+      button: {
+        margin: 15,
+      },
+    };
     return (
       <div>
         {util.renderIf(!this.props.token,
           <Redirect to='/' />
         )}
         <form onSubmit={(event) => event.preventDefault()}>
-          <input
-            required
-            type='text'
-            name='title'
-            onChange={this.handleChange}
-            value={this.state.title}
-            placeholder='Title'
-          />
-          <input
-            required
-            type='text'
-            name='description'
-            onChange={this.handleChange}
-            value={this.state.description}
-            placeholder='Description'
-          />
-          <button
-            name='save-dictation'
-            onClick={this.handleSave}
-          >
-            Save Dictation
-          </button>
+          <div className='listening'>
+            <IconButton
+              iconStyle={style.largeIcon}
+              style={style.large}
+            >
+              <Recorder />
+              {util.renderIf(!this.state.listening, 'Start Listening')}
+              {util.renderIf(this.state.listening, 'Stop Listening')}
+            </IconButton>
+            <TextField
+              type='text'
+              name='title'
+              onChange={this.handleChange}
+              value={this.state.title}
+              hintText='Title'
+            />
+            <br />
+            <TextField
+              type='text'
+              name='description'
+              onChange={this.handleChange}
+              value={this.state.description}
+              hintText='Description'
+            />
+            <br />
+            <div className='save-dictation'>
+              <RaisedButton
+                onClick={this.handleSave}
+                type='submit'
+                label="Save Dictation"
+                style={style.button}
+                fullWidth={false} />
+            </div>
+            <br />
+          </div>
         </form>
-        <button
-          name='listener'
-          onClick={this.handleListener}
-        >
-          {util.renderIf(!this.state.listening, 'Start Listening')}
-          {util.renderIf(this.state.listening, 'Stop Listening')}
-        </button>
-
-
-        <AceEditor
-          name='final'
-          mode='text'
-          theme='github'
-          width='100%'
-          onChange={this.handleChange}
-          editorProps={{$blockScrolling: true}}
-          setOptions={{
-            wrap: true,
-            maxLines: Infinity,
-            autoScrollEditorIntoView: true,
-            wrapBehavioursEnabled: true,
-            indentedSoftWrap: false,
-            behavioursEnabled: false,
-            showGutter: false,
-            showLineNumbers: false,
-            fontSize: 15,
-          }}
-          value={this.state.final}
-        />
-        <span>{this.state.interim}</span>
+        <br />
+        <div className='editor'>
+          <AceEditor
+            name='final'
+            mode='text'
+            theme='github'
+            width='100%'
+            onChange={this.handleChange}
+            editorProps={{$blockScrolling: true}}
+            setOptions={{
+              wrap: true,
+              maxLines: Infinity,
+              autoScrollEditorIntoView: true,
+              wrapBehavioursEnabled: true,
+              indentedSoftWrap: false,
+              behavioursEnabled: false,
+              showGutter: false,
+              showLineNumbers: false,
+              fontSize: 15,
+            }}
+            value={this.state.final}
+          />
+          <span>{this.state.interim}</span>
+        </div>
       </div>
     );
   }
