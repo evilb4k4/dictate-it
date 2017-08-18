@@ -52,6 +52,7 @@
     "react-router-dom": "^4.1.2",
     "react-test-renderer": "^15.6.1",
     "redux": "^3.7.2",
+    "redux-mock-store": "^1.2.3",
     "resolve-url-loader": "^2.1.0",
     "sass-loader": "^6.0.6",
     "socket.io-client": "^2.0.3",

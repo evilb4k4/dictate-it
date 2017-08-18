@@ -14,6 +14,7 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import IconButton from 'material-ui/IconButton';
 import googleSVG from '../../assets/google.svg';
 
+
 export class LoginContainer extends React.Component {
   constructor(props) {
     super(props);
@@ -43,6 +44,7 @@ export class LoginContainer extends React.Component {
   }
 
   render(){
+
     let googleLoginBaseURL='https://accounts.google.com/o/oauth2/v2/auth';
     let googleLoginQuery = querystring.stringify({
       client_id: __GOOGLE_CLIENT_ID__,

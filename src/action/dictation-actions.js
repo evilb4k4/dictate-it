@@ -47,7 +47,6 @@ export const dictationCreateRequest = (dictation) => (dispatch, getState) => {
       title: dictation.title,
       body: dictation.body,
     })
-    // .field('public', dictation.public)
     .then(res => {
       dispatch(dictationCreate(res.body));
       return res;
@@ -58,16 +57,18 @@ export const dictationUpdateRequest = (dictation) => (dispatch, getState) => {
   let {token} = getState();
   return superagent.put(`${__API_URL__}/dictations/${dictation._id}`)
     .set('Authorization', `Bearer ${token}`)
-    .field('description', dictation.description)
-    .field('title', dictation.title)
-    .field('public', dictation.public)
+    .send({
+      description: dictation.description,
+      title: dictation.title,
+      body: dictation.body,
+    })
     .then(res => {
       dispatch(dictationUpdate(res.body));
       return res;
     });
 };
 
-export const dictationFetchRequest = () => (dispatch, getState) => {
+export const dictationFetchAllRequest = () => (dispatch, getState) => {
   let {token} = getState();
 
   return superagent.get(`${__API_URL__}/dictations`)
@@ -78,11 +79,11 @@ export const dictationFetchRequest = () => (dispatch, getState) => {
     });
 };
 
-export const dictationDeleteRequest = (dictation) => (dispatch, getState) => {
+export const dictationDeleteRequest = (id) => (dispatch, getState) => {
   let {token} = getState();
-  return superagent.delete(`${__API_URL__}/dictations/${dictation._id}`)
+  return superagent.delete(`${__API_URL__}/dictations/${id}`)
     .set('Authorization', `Bearer ${token}`)
     .then(res => {
-      dispatch(dictationDelete(dictation));
+      dispatch(dictationDelete(res.body));
     });
 };
