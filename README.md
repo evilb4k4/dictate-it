@@ -137,42 +137,4 @@
 &nbsp;
 
 
-# **Meet The Team**
-&nbsp;
-
-## **Ryan Turner**
-![]()
-
-
-&nbsp;
-
-## **Adan **
-![]()
-
-&nbsp;
-
-## **Spencer**
-![]()
-
-
-&nbsp;
-
-## **Izzy Baer**
-![Izzy-Baer](temp-assets/izzybaer.jpg)
-
-Hey y'all, I'm Izabella Baer, but you can call me Izzy.  
-I have a BA in Arabic and Sociology;  
-now I'm a full stack JavaScript Developer.    
-I'm going to use my language skills to create unique user experiences  
-for as many people as possible, all around the world.  
-&nbsp;
-&nbsp;
-&nbsp;
-
-
-
-
-
-
-
 &copy; Dictate it!  
