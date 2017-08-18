@@ -6,7 +6,6 @@ import * as util from '../../lib/util.js';
 import * as auth from '../../action/auth-actions.js';
 import {Redirect} from 'react-router-dom';
 import validator from 'validator';
-import AppBar from 'material-ui/AppBar';
 import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme';
 import RaisedButton from 'material-ui/RaisedButton';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
@@ -26,7 +25,6 @@ export class SignupContainer extends React.Component {
 
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
-    // this.validateChange = this.validateChange.bind(this);
   }
 
   handleSubmit(e){
@@ -57,28 +55,32 @@ export class SignupContainer extends React.Component {
             name='email'
             type='email'
             hintText='email'
+            fullWidth={false}
             value={this.state.email}
             onChange={this.handleChange}
           />
-
+          <br />
           <TextField
             name='username'
             type='text'
             hintText='username'
+            fullWidth={false}
             value={this.state.username}
             onChange={this.handleChange}
           />
+          <br />
           <TextField
             required
             name='password'
             type='password'
             hintText='password'
+            fullWidth={false}
             value={this.state.password}
             onChange={this.handleChange}
           />
-
+          <br />
           <div className='signup-submit'>
-            <RaisedButton type='submit' label="Submit" fullWidth={true} />
+            <RaisedButton type='submit' label="Submit" fullWidth={false} />
           </div>
 
         </form>

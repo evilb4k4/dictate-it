@@ -6,6 +6,10 @@ import * as auth from '../../action/auth-actions.js';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import {cyan500} from 'material-ui/styles/colors';
+import AppBar from 'material-ui/AppBar';
+import IconButton from 'material-ui/IconButton';
+import NavigationClose from 'material-ui/svg-icons/navigation/close';
+import FlatButton from 'material-ui/FlatButton';
 
 import Dictation from '../dictation';
 import LandingContainer from '../landing-container';
@@ -21,7 +25,16 @@ export class App extends React.Component {
       this.props.tokenSet(token);
   }
 
+  handleMenuOpen(){
+
+  }
+
   render(){
+    const styles = {
+      title: {
+        cursor: 'pointer',
+      },
+    };
     const muiTheme = getMuiTheme({
       palette: {
         textColor: cyan500,
@@ -34,6 +47,13 @@ export class App extends React.Component {
     return (
       <MuiThemeProvider muiTheme={muiTheme}>
         <div className='app'>
+          <AppBar
+            title={<span style={styles.title}>Dictate It</span>}
+            iconClassNameRight="muidocs-icon-navigation-expand-more"
+            // onTitleTouchTap={handleTouchTap}
+            // iconElementLeft={<IconButton><NavigationClose /></IconButton>}
+            // iconElementRight={<FlatButton label="Save" />}
+          />
           <BrowserRouter>
             <main>
 
