@@ -87,6 +87,7 @@ export class LoginContainer extends React.Component {
                   labelPosition="before"
                   primary={true}
                   fullWidth={false}
+                  backgroundColor={'#29B6F6'}
                   style={style.button}
                   icon={<img src={googleSVG} width={25} height={25}/>}
                 />
@@ -96,7 +97,7 @@ export class LoginContainer extends React.Component {
                 <RaisedButton label="Sign Up"
                   style={style.button}
                   containerElement={<Link to="/signup" />}
-                  // linkButton={true} 
+                  // linkButton={true}
                 />
                 <br />
                   OR

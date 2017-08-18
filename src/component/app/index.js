@@ -64,10 +64,16 @@ export class App extends React.Component {
         textAlign: 'center',
         marginTop: '75px',
       },
+
       inputs: {
         width: '50%',
         margin: '0 auto',
       },
+
+      underlineStyle: {
+        borderColor: '#29B6F6',
+      },
+
     });
     return (
       <MuiThemeProvider muiTheme={muiTheme}>
@@ -75,16 +81,10 @@ export class App extends React.Component {
           <AppBar
             style={{backgroundColor: '#29B6F6'}}
             title={<span style={styles.title}>DICTATE IT</span>}
-            iconElementLeft={<IconButton><CoolGuy /></IconButton>}
-            // onTitleTouchTap={handleTouchTap}
-            // iconElementLeft={<IconButton><NavigationClose /></IconButton>}
-            // iconElementRight={<FlatButton label="Save" />}
+            iconElementLeft={<IconButton
+              onClick={this.handleToggle}><CoolGuy /></IconButton>}
           />
           <div className="drawer">
-            <RaisedButton
-              label="Open Drawer"
-              onClick={this.handleToggle}
-            />
             <DrawerMenu
               open={this.state.open}
               docked={false}
@@ -92,14 +92,13 @@ export class App extends React.Component {
               onRequestChange={(open) => this.setState({open})}
             >
               <MenuItem
-                // containerElement={<Link to="/team" />}
                 onClick={this.handleClose}>
-                The Team
+                My Dictations
               </MenuItem>
               <MenuItem
                 // containerElement={<Link to="/dictation/*" />}
                 onClick={this.handleClose}>
-                Browse Dictations
+                Public Dictations
               </MenuItem>
             </DrawerMenu>
           </div>
