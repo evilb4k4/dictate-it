@@ -5,6 +5,7 @@ import {dictationFetchAllRequest, dictationDeleteRequest} from '../../action/dic
 import * as util from '../../lib/util';
 import superagent from 'superagent';
 
+
 export class DictationContainer extends React.Component {
   constructor(props){
     super(props);
@@ -25,10 +26,10 @@ export class DictationContainer extends React.Component {
   }
 
   componentWillMount() {
-    util.log(this.props)
-    this.props.getAllDictations()
-      .then(() => util.log('yo'))
-      .catch(err => util.logError(err));
+    util.log(this.props);
+    // this.props.getAllDictations()
+    //   .then(() => util.log('yo'))
+    //   .catch(err => util.logError(err));
     this.getUserFromToken(this.props.token)
       .catch(err => util.logError(err));
   }
@@ -65,7 +66,7 @@ export class DictationContainer extends React.Component {
                   {dictation.description}
                 </td>
               </tr>
-              : undefined
+                : undefined
             )}
           </tbody>
         </table>
