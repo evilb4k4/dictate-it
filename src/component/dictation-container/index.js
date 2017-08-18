@@ -3,18 +3,31 @@ import {connect} from 'react-redux';
 import {Link, Redirect} from 'react-router-dom';
 import {dictationFetchAllRequest, dictationDeleteRequest} from '../../action/dictation-actions.js';
 import * as util from '../../lib/util';
+import superagent from 'superagent';
 
 export class DictationContainer extends React.Component {
   constructor(props){
     super(props);
-
+    this.state = {
+      ownerId: '',
+    };
     this.handleDeleteDictation = this.handleDeleteDictation.bind(this);
+    this.getUserFromToken = this.getUserFromToken.bind(this);
+  }
+
+  getUserFromToken(token) {
+    return superagent.get(`${__API_URL__}/user`)
+      .set('Authorization', `Bearer ${token}`)
+      .then(res => {
+        this.setState({ ownerId: res.body._id });
+        return res;
+      });
   }
 
   componentWillMount() {
     this.props.getAllDictations()
       .catch(err => util.logError(err));
-    this.props.getMyDictations()
+    this.getUserFromToken(this.props.token)
       .catch(err => util.logError(err));
   }
 
@@ -38,7 +51,7 @@ export class DictationContainer extends React.Component {
             </tr>
           </thead>
           <tbody>
-            {this.props.dictations.map((dictation, i) =>
+            {this.props.dictations.filter(dictation => dictation.ownerId === this.state.ownerId).map((dictation, i) =>
               dictation._id ? <tr key={i}>
                 <td>
                   <button onClick={this.handleDeleteDictation} id={dictation._id}>X</button>
