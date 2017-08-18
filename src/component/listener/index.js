@@ -4,6 +4,7 @@ import * as util from '../../lib/util';
 import {Redirect} from 'react-router-dom';
 import AceEditor from 'react-ace';
 import {dictationCreateRequest, dictationUpdateRequest} from '../../action/dictation-actions.js';
+import * as edit from '../../action/edit-actions.js';
 
 import 'brace/mode/text';
 import 'brace/theme/github';
@@ -34,8 +35,13 @@ export class Listener extends React.Component {
     } else {
       this.setState({ final: event });
     }
+    util.log(this.props.dictation)
+    this.props.liveEdit({
+      dictationId: this.props.dictation._id,
+      body: this.state.final,
+    });
   }
-
+  
   shouldComponentUpdate(nextProps){
     if(nextProps.final == this.state.final)
       return false;
@@ -110,6 +116,10 @@ export class Listener extends React.Component {
       }
 
       this.setState({final: final_transcript, interim: interim_transcript});
+      this.props.liveEdit({
+        dictationId: this.props.dictation._id,
+        body: this.state.final,
+      });
       this.forceUpdate();
       util.log('__after onresult');
     };
@@ -135,6 +145,7 @@ export class Listener extends React.Component {
   }
 
   render() {
+    util.log(this.props.history)
     return (
       <div>
         {util.renderIf(!this.props.token,
@@ -172,7 +183,6 @@ export class Listener extends React.Component {
           {util.renderIf(this.state.listening, 'Stop Listening')}
         </button>
 
-
         <AceEditor
           name='final'
           mode='text'
@@ -201,11 +211,13 @@ export class Listener extends React.Component {
 
 export const mapStateToProps = (state) => ({
   token: state.token,
+  edits: state.edits,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
   dictationCreate: dictation => dispatch(dictationCreateRequest(dictation)),
   dictationUpdate: dictation => dispatch(dictationUpdateRequest(dictation)),
+  liveEdit: dictation => dispatch(edit.edit(dictation)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Listener);

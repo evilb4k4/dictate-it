@@ -5,15 +5,13 @@ import {Provider} from 'react-redux';
 
 import App from './component/app';
 import storeCreate from './lib/store-create';
-// import io from './lib/io.js';
-// import userSubscribers from './subscribe/user.js';
+import io from './lib/io.js';
+import editSubscribers from './subscribe/edit.js';
 
 const store = storeCreate();
 
-// let subscribers = Object.assign(userSubscribers);
-
-// io(store, subscribers);
-
+let subscribers = Object.assign(editSubscribers);
+io(store, subscribers);
 
 let AppContainer = () => (
   <Provider store={store}>

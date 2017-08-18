@@ -4,14 +4,12 @@ export default (state = initialState, action) => {
   switch(type) {
   case 'DICTATION_CREATE':
     return [...state, payload];
-  case 'DICTATION_MINE':
-    return [...state, payload];
   case 'DICTATION_START':
     return [...state, payload];
   case 'DICTATION_STOP':
     return [...state, payload];
   case 'DICTATION_FETCH':
-    return payload;
+    return [...state, payload];
   case 'DICTATION_UPDATE':
     return state.map(dictation =>
       dictation.id == payload.id ? payload : dictation);

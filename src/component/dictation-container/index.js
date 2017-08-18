@@ -25,7 +25,9 @@ export class DictationContainer extends React.Component {
   }
 
   componentWillMount() {
+    util.log(this.props)
     this.props.getAllDictations()
+      .then(() => util.log('yo'))
       .catch(err => util.logError(err));
     this.getUserFromToken(this.props.token)
       .catch(err => util.logError(err));
