@@ -4,7 +4,7 @@ import * as util from '../../lib/util';
 import * as auth from '../../action/auth-actions.js';
 import * as querystring from 'querystring';
 import {Redirect, Link} from 'react-router-dom';
-import Card from 'material-ui/Card';
+import {Card, CardActions} from 'material-ui/Card';
 import RaisedButton from 'material-ui/RaisedButton';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme';
@@ -56,8 +56,11 @@ export class LoginContainer extends React.Component {
 
     const style ={
       card: {
-        width: '30%',
+        height: '350px',
+        width: '275px',
         margin: '0 auto',
+        textAlign: 'center',
+        marginTop: '75px',
       },
 
       inputs: {
@@ -76,15 +79,6 @@ export class LoginContainer extends React.Component {
       <Card style={style.card} id="login-card">
         <div className='login-container'>
           <header>
-            {util.renderIf(this.props.token,
-              <div className='login-links'>
-                <RaisedButton type='submit' label="Submit" fullWidth={false} />
-
-                <Link to='/landing'>Home</Link>
-                <Link to='/dictation'>New Dictation</Link>
-                <button onClick={this.props.logout}>Logout</button>
-              </div>
-            )}
             {util.renderIf(!this.props.token,
               <div className='login'>
                 <RaisedButton
@@ -92,11 +86,20 @@ export class LoginContainer extends React.Component {
                   label="Login with "
                   labelPosition="before"
                   primary={true}
-                  fullWidth={true}
+                  fullWidth={false}
                   style={style.button}
                   icon={<img src={googleSVG} width={25} height={25}/>}
-                /><br />
-                <Link to='/signup'>Sign Up</Link><br />
+                />
+                <br />
+                OR
+                <br />
+                <RaisedButton label="Sign Up"
+                  style={style.button}
+                  containerElement={<Link to="/signup" />}
+                  linkButton={true} />
+                <br />
+                  OR
+                <br />
               </div>
             )}
           </header>

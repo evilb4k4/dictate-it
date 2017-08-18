@@ -10,6 +10,7 @@ import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme';
 import RaisedButton from 'material-ui/RaisedButton';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import TextField from 'material-ui/TextField';
+import {Card, CardActions} from 'material-ui/Card';
 
 export class SignupContainer extends React.Component {
   constructor(props){
@@ -45,46 +46,66 @@ export class SignupContainer extends React.Component {
   }
 
   render(){
-    return(
-      <div className='signup-container'>
-        {util.renderIf(this.props.token,
-          <Redirect to='/landing' />
-        )}
-        <form onSubmit={this.handleSubmit}>
-          <TextField
-            name='email'
-            type='email'
-            hintText='email'
-            fullWidth={false}
-            value={this.state.email}
-            onChange={this.handleChange}
-          />
-          <br />
-          <TextField
-            name='username'
-            type='text'
-            hintText='username'
-            fullWidth={false}
-            value={this.state.username}
-            onChange={this.handleChange}
-          />
-          <br />
-          <TextField
-            required
-            name='password'
-            type='password'
-            hintText='password'
-            fullWidth={false}
-            value={this.state.password}
-            onChange={this.handleChange}
-          />
-          <br />
-          <div className='signup-submit'>
-            <RaisedButton type='submit' label="Submit" fullWidth={false} />
-          </div>
+    const style ={
+      card: {
+        height: '60%',
+        width: '40%',
+        margin: '0 auto',
+        textAlign: 'center',
+      },
 
-        </form>
-      </div>
+      inputs: {
+        width: '50%',
+        margin: '0 auto',
+
+      },
+      button: {
+        margin: 15,
+
+      },
+    };
+    return(
+      <Card style={style.card} id="signup-card">
+        <div className='signup-container'>
+          {util.renderIf(this.props.token,
+            <Redirect to='/landing' />
+          )}
+          <form onSubmit={this.handleSubmit}>
+            <TextField
+              name='email'
+              type='email'
+              hintText='email'
+              fullWidth={false}
+              value={this.state.email}
+              onChange={this.handleChange}
+            />
+            <br />
+            <TextField
+              name='username'
+              type='text'
+              hintText='username'
+              fullWidth={false}
+              value={this.state.username}
+              onChange={this.handleChange}
+            />
+            <br />
+            <TextField
+              required
+              name='password'
+              type='password'
+              hintText='password'
+              fullWidth={false}
+              value={this.state.password}
+              onChange={this.handleChange}
+            />
+            <br />
+            <div className='signup-submit'>
+              <RaisedButton type='submit' label="Submit" fullWidth={false} />
+            </div>
+
+          </form>
+        </div>
+      </Card>
     );
   }
 }
