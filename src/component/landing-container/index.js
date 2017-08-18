@@ -33,7 +33,8 @@ export class LandingContainer extends React.Component {
       },
       button: {
         margin: 15,
-        color: '#29B6F6',
+        backgroundColor: '#29B6F6',
+        color: '#FFF',
       },
     };
     return (
@@ -45,14 +46,16 @@ export class LandingContainer extends React.Component {
           {util.renderIf(this.props.token,
             <div className='dictation'>
               <DictationContainer />
-              <RaisedButton
-                label="Create a new dictation "
-
-                labelPosition="before"
-                primary={true}
-                fullWidth={false}
-                style={{color: '#29B6F6'}}
-              />
+              <Link to='/dictation'>
+                <RaisedButton
+                  label="Create a new dictation "
+                  labelColor={'#FFF'}
+                  labelPosition="before"
+                  primary={false}
+                  fullWidth={false}
+                  style={style.button}
+                  backgroundColor={'#29B6F6'}
+                /></Link>
               <br />
               <div className='logout-submit'>
                 <RaisedButton type='submit'

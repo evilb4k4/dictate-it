@@ -5,9 +5,11 @@ import * as util from '../../lib/util';
 import {Redirect} from 'react-router-dom';
 import TextField from 'material-ui/TextField';
 import IconButton from 'material-ui/IconButton';
+import {Card, CardActions} from 'material-ui/Card';
 import RaisedButton from 'material-ui/RaisedButton';
 import Recorder from 'material-ui/svg-icons/hardware/keyboard-voice';
 import {dictationCreateRequest, dictationUpdateRequest} from '../../action/dictation-actions.js';
+import * as edit from '../../action/edit-actions.js';
 
 import 'brace/mode/text';
 import 'brace/theme/github';
@@ -23,6 +25,7 @@ export class Listener extends React.Component {
       interim: '',
       title: props.dictation.title ? props.dictation.title : '',
       description: props.dictation.description ? props.dictation.description : '',
+      // eslint-disable-next-line no-undef
       recognition: new webkitSpeechRecognition(),
     };
 
@@ -38,6 +41,11 @@ export class Listener extends React.Component {
     } else {
       this.setState({ final: event });
     }
+    util.log(this.props.dictation);
+    this.props.liveEdit({
+      dictationId: this.props.dictation._id,
+      body: this.state.final,
+    });
   }
 
   shouldComponentUpdate(nextProps){
@@ -68,7 +76,6 @@ export class Listener extends React.Component {
 
   handleListener(event) {
     event.preventDefault();
-    // eslint-disable-next-line no-undef
     this.state.recognition.continuous = true;
     this.state.recognition.interimResults = true;
 
@@ -114,13 +121,17 @@ export class Listener extends React.Component {
       }
 
       this.setState({final: final_transcript, interim: interim_transcript});
+      this.props.liveEdit({
+        dictationId: this.props.dictation._id,
+        body: this.state.final,
+      });
       this.forceUpdate();
       util.log('__after onresult');
     };
 
-    function resetVoiceRecog() {
+    let resetVoiceRecog = () => {
       this.state.recognition.stop();
-    }
+    };
 
     this.state.recognition.onresult = this.state.recognition.onresult.bind(this);
     this.state.recognition.onend = this.state.recognition.onend.bind(this);
@@ -142,94 +153,114 @@ export class Listener extends React.Component {
 
     const style = {
       largeIcon: {
-        width: 60,
-        height: 60,
+        width: 100,
+        height: 100,
       },
       large: {
-        width: 120,
-        height: 120,
+        width: 150,
+        height: 150,
         padding: 30,
       },
       card: {
-        height: '350px',
-        width: '275px',
+        height: '50%',
+        width: '50%',
         margin: '0 auto',
         textAlign: 'center',
-        marginTop: '75px',
+        marginTop: '20px',
       },
       inputs: {
+        marginTop: '20px',
         width: '50%',
         margin: '0 auto',
       },
       button: {
         margin: 15,
       },
+      underlineStyle: {
+        borderColor: '#29B6F6',
+      },
     };
     return (
-      <div>
-        {util.renderIf(!this.props.token,
-          <Redirect to='/' />
-        )}
-        <form onSubmit={(event) => event.preventDefault()}>
-          <div className='listening'>
-            <IconButton
-              iconStyle={style.largeIcon}
-              style={style.large}
-            >
-              <Recorder />
-              {util.renderIf(!this.state.listening, 'Start Listening')}
-              {util.renderIf(this.state.listening, 'Stop Listening')}
-            </IconButton>
-            <TextField
-              type='text'
-              name='title'
-              onChange={this.handleChange}
-              value={this.state.title}
-              hintText='Title'
-            />
-            <br />
-            <TextField
-              type='text'
-              name='description'
-              onChange={this.handleChange}
-              value={this.state.description}
-              hintText='Description'
-            />
-            <br />
-            <div className='save-dictation'>
-              <RaisedButton
-                onClick={this.handleSave}
-                type='submit'
-                label="Save Dictation"
-                style={style.button}
-                fullWidth={false} />
-            </div>
-            <br />
+      <div className='listening'>
+        <IconButton
+          iconStyle={style.largeIcon}
+          style={style.large}
+        >
+          <Recorder />
+          <div className='recorder'>
+            {util.renderIf(!this.state.listening,
+              'start listening'
+            )}
+            {util.renderIf(this.state.listening,
+              'stop listening'
+            )}
           </div>
-        </form>
-        <br />
-        <div className='editor'>
-          <AceEditor
-            name='final'
-            mode='text'
-            theme='github'
-            width='100%'
-            onChange={this.handleChange}
-            editorProps={{$blockScrolling: true}}
-            setOptions={{
-              wrap: true,
-              maxLines: Infinity,
-              autoScrollEditorIntoView: true,
-              wrapBehavioursEnabled: true,
-              indentedSoftWrap: false,
-              behavioursEnabled: false,
-              showGutter: false,
-              showLineNumbers: false,
-              fontSize: 15,
-            }}
-            value={this.state.final}
-          />
-          <span>{this.state.interim}</span>
+        </IconButton>
+        <div>
+          {util.renderIf(!this.props.token,
+            <Redirect to='/' />
+          )}
+
+          <Card style={style.card} id="save-dictation-card">
+            <form onSubmit={(event) => event.preventDefault()}>
+
+              <div className='inputs-card'>
+                <TextField
+                  type='text'
+                  name='title'
+                  underlineStyle={'#29B6F6'}
+                  onChange={this.handleChange}
+                  value={this.state.title}
+                  hintText='Title'
+                />
+                <br />
+                <TextField
+                  type='text'
+                  name='description'
+                  onChange={this.handleChange}
+                  underlineStyle={'#29B6F6'}
+                  value={this.state.description}
+                  hintText='Description'
+                />
+                <br />
+                <Card style={style.card} id="editor-card">
+                  <div className='editor'>
+                    <AceEditor
+                      name='final'
+                      mode='text'
+                      theme='github'
+                      width='100%'
+                      onChange={this.handleChange}
+                      editorProps={{$blockScrolling: true}}
+                      setOptions={{
+                        wrap: true,
+                        maxLines: Infinity,
+                        autoScrollEditorIntoView: true,
+                        wrapBehavioursEnabled: true,
+                        indentedSoftWrap: false,
+                        behavioursEnabled: false,
+                        showGutter: false,
+                        showLineNumbers: false,
+                        fontSize: 15,
+                      }}
+                      value={this.state.final}
+                    />
+                    <span>{this.state.interim}</span>
+                  </div>
+                </Card>
+                <div className='save-dictation'>
+                  <RaisedButton
+                    onClick={this.handleSave}
+                    type='submit'
+                    label="Save Dictation"
+                    style={style.button}
+                    fullWidth={false} />
+                </div>
+                <br />
+              </div>
+            </form>
+            <br />
+          </Card>
         </div>
       </div>
     );
@@ -238,11 +269,13 @@ export class Listener extends React.Component {
 
 export const mapStateToProps = (state) => ({
   token: state.token,
+  edits: state.edits,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
   dictationCreate: dictation => dispatch(dictationCreateRequest(dictation)),
   dictationUpdate: dictation => dispatch(dictationUpdateRequest(dictation)),
+  liveEdit: dictation => dispatch(edit.edit(dictation)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Listener);

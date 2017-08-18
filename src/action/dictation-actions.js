@@ -70,7 +70,6 @@ export const dictationUpdateRequest = (dictation) => (dispatch, getState) => {
 
 export const dictationFetchAllRequest = () => (dispatch, getState) => {
   let {token} = getState();
-
   return superagent.get(`${__API_URL__}/dictations`)
     .set('Authorization', `Bearer ${token}`)
     .then(res => {
