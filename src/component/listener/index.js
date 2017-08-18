@@ -81,6 +81,8 @@ export class Listener extends React.Component {
     util.log(this.props.dictation);
     this.props.liveEdit({
       dictationId: this.props.dictation._id,
+      title: this.props.dictation.title,
+      description: this.props.dictation.description,
       body: this.state.final,
     });
   }
@@ -88,6 +90,14 @@ export class Listener extends React.Component {
   shouldComponentUpdate(nextProps){
     if(nextProps.final == this.state.final)
       return false;
+    // if(this.props.edits && this.props.edits.length > 0) {
+    //   let edits = this.props.edits[this.props.edits.length - 1];
+    //   this.setState({
+    //     final: edits.body,
+    //     title: edits.title,
+    //     description: edits.description,
+    //   });
+    // }
     return true;
   }
 
@@ -220,6 +230,8 @@ export class Listener extends React.Component {
     let dictation = this.props.dictations.filter(dictation => dictation._id === param)[0];
     dictation = dictation || {}
     console.log('dictation', dictation)
+
+    dictation.body = this.props.edits[this.props.edits.length - 1] ? this.props.edits[this.props.edits.length - 1].body : dictation.body;
     return (
       <div>
         {util.renderIf(!this.props.token,
@@ -282,7 +294,7 @@ export class Listener extends React.Component {
               showLineNumbers: false,
               fontSize: 15,
             }}
-            value={this.state.final}
+            value={this.state.final ? this.state.final : dictation.body}
           />
           <span>{this.state.interim}</span>
         </div>
