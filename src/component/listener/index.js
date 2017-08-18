@@ -8,6 +8,7 @@ import IconButton from 'material-ui/IconButton';
 import RaisedButton from 'material-ui/RaisedButton';
 import Recorder from 'material-ui/svg-icons/hardware/keyboard-voice';
 import {dictationCreateRequest, dictationUpdateRequest} from '../../action/dictation-actions.js';
+import * as edit from '../../action/edit-actions.js';
 
 import 'brace/mode/text';
 import 'brace/theme/github';
@@ -23,6 +24,7 @@ export class Listener extends React.Component {
       interim: '',
       title: props.dictation.title ? props.dictation.title : '',
       description: props.dictation.description ? props.dictation.description : '',
+      // eslint-disable-next-line no-undef
       recognition: new webkitSpeechRecognition(),
     };
 
@@ -38,6 +40,11 @@ export class Listener extends React.Component {
     } else {
       this.setState({ final: event });
     }
+    util.log(this.props.dictation);
+    this.props.liveEdit({
+      dictationId: this.props.dictation._id,
+      body: this.state.final,
+    });
   }
 
   shouldComponentUpdate(nextProps){
@@ -68,7 +75,6 @@ export class Listener extends React.Component {
 
   handleListener(event) {
     event.preventDefault();
-    // eslint-disable-next-line no-undef
     this.state.recognition.continuous = true;
     this.state.recognition.interimResults = true;
 
@@ -114,13 +120,17 @@ export class Listener extends React.Component {
       }
 
       this.setState({final: final_transcript, interim: interim_transcript});
+      this.props.liveEdit({
+        dictationId: this.props.dictation._id,
+        body: this.state.final,
+      });
       this.forceUpdate();
       util.log('__after onresult');
     };
 
-    function resetVoiceRecog() {
+    let resetVoiceRecog = () => {
       this.state.recognition.stop();
-    }
+    };
 
     this.state.recognition.onresult = this.state.recognition.onresult.bind(this);
     this.state.recognition.onend = this.state.recognition.onend.bind(this);
@@ -238,11 +248,13 @@ export class Listener extends React.Component {
 
 export const mapStateToProps = (state) => ({
   token: state.token,
+  edits: state.edits,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
   dictationCreate: dictation => dispatch(dictationCreateRequest(dictation)),
   dictationUpdate: dictation => dispatch(dictationUpdateRequest(dictation)),
+  liveEdit: dictation => dispatch(edit.edit(dictation)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Listener);

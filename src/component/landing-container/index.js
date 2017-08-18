@@ -12,7 +12,7 @@ import * as auth from '../../action/auth-actions.js';
 import DictationContainer from '../dictation-container';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-// 
+//
 // import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme';
 
 export class LandingContainer extends React.Component {
@@ -45,13 +45,14 @@ export class LandingContainer extends React.Component {
           {util.renderIf(this.props.token,
             <div className='dictation'>
               <DictationContainer />
+              <Link to='/dictation'>
               <RaisedButton
                 label="Create a new dictation "
                 labelPosition="before"
                 primary={true}
                 fullWidth={false}
                 style={style.button}
-              />
+              /></Link>
               <br />
               <div className='logout-submit'>
                 <RaisedButton type='submit'
