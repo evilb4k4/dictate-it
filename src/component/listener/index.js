@@ -8,7 +8,7 @@ import {dictationCreateRequest, dictationUpdateRequest} from '../../action/dicta
 import 'brace/mode/text';
 import 'brace/theme/github';
 
-let timerId = 0;
+let timerId;
 
 export class Listener extends React.Component {
   constructor(props) {
@@ -65,7 +65,6 @@ export class Listener extends React.Component {
   handleListener(event) {
     event.preventDefault();
     // eslint-disable-next-line no-undef
-    // let recognition = new webkitSpeechRecognition();
     this.state.recognition.continuous = true;
     this.state.recognition.interimResults = true;
 
@@ -127,8 +126,8 @@ export class Listener extends React.Component {
     try {
       this.state.recognition.start();
     } catch(err) {
-      this.setState({ recognition: null });
       clearInterval(timerId);
+      this.state.recognition.onend = () => null;
       return;
     }
     timerId = setInterval(resetVoiceRecog, 7500);
@@ -141,32 +140,30 @@ export class Listener extends React.Component {
         {util.renderIf(!this.props.token,
           <Redirect to='/' />
         )}
-        {util.renderIf(this.state.title,
-          <h2>{this.state.title}</h2>
-        )}
-        {util.renderIf(this.state.description,
-          <p>{this.state.description}</p>
-        )}
-        {util.renderIf(!this.state.title || !this.state.description,
-          <form onSubmit={(event) => event.preventDefault()}>
-            <input
-              required
-              type='text'
-              name='title'
-              onChange={this.handleChange}
-              value={this.state.title}
-              placeholder='Title'
-            />
-            <input
-              required
-              type='text'
-              name='description'
-              onChange={this.handleChange}
-              value={this.state.description}
-              placeholder='Description'
-            />
-          </form>
-        )}
+        <form onSubmit={(event) => event.preventDefault()}>
+          <input
+            required
+            type='text'
+            name='title'
+            onChange={this.handleChange}
+            value={this.state.title}
+            placeholder='Title'
+          />
+          <input
+            required
+            type='text'
+            name='description'
+            onChange={this.handleChange}
+            value={this.state.description}
+            placeholder='Description'
+          />
+          <button
+            name='save-dictation'
+            onClick={this.handleSave}
+          >
+            Save Dictation
+          </button>
+        </form>
         <button
           name='listener'
           onClick={this.handleListener}
@@ -174,12 +171,7 @@ export class Listener extends React.Component {
           {util.renderIf(!this.state.listening, 'Start Listening')}
           {util.renderIf(this.state.listening, 'Stop Listening')}
         </button>
-        <button
-          name='save-dictation'
-          onClick={this.handleSave}
-        >
-          Save Dictation
-        </button>
+
 
         <AceEditor
           name='final'
