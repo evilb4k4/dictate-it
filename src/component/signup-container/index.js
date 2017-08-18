@@ -6,6 +6,11 @@ import * as util from '../../lib/util.js';
 import * as auth from '../../action/auth-actions.js';
 import {Redirect} from 'react-router-dom';
 import validator from 'validator';
+import AppBar from 'material-ui/AppBar';
+import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme';
+import RaisedButton from 'material-ui/RaisedButton';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import TextField from 'material-ui/TextField';
 
 export class SignupContainer extends React.Component {
   constructor(props){
@@ -48,33 +53,34 @@ export class SignupContainer extends React.Component {
           <Redirect to='/landing' />
         )}
         <form onSubmit={this.handleSubmit}>
-          <input
-            required
+          <TextField
             name='email'
             type='email'
-            placeholder='email'
+            hintText='email'
             value={this.state.email}
             onChange={this.handleChange}
           />
 
-          <input
-            required
+          <TextField
             name='username'
             type='text'
-            placeholder='username'
+            hintText='username'
             value={this.state.username}
             onChange={this.handleChange}
           />
-          <input
+          <TextField
             required
             name='password'
             type='password'
-            placeholder='password'
+            hintText='password'
             value={this.state.password}
             onChange={this.handleChange}
           />
 
-          <button type='submit'> Signup </button>
+          <div className='signup-submit'>
+            <RaisedButton type='submit' label="Submit" fullWidth={true} />
+          </div>
+
         </form>
       </div>
     );
