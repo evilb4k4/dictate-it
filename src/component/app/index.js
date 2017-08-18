@@ -6,12 +6,10 @@ import * as auth from '../../action/auth-actions.js';
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import {teal500} from 'material-ui/styles/colors';
-// import Spacing from 'material-ui/lib/styles/spacing';
 import CoolGuy from 'material-ui/svg-icons/action/record-voice-over';
 import AppBar from 'material-ui/AppBar';
 import IconButton from 'material-ui/IconButton';
-// import NavigationClose from 'material-ui/svg-icons/navigation/close';
+
 import FlatButton from 'material-ui/FlatButton';
 import DrawerMenu from 'material-ui/Drawer';
 import MenuItem from 'material-ui/MenuItem';
@@ -59,10 +57,29 @@ export class App extends React.Component {
       // spacing: Spacing,
       fontFamily: 'Roboto, sans-serif',
       palette: {
+        primaryColor: '#29B6F6',
+        secondaryColor: '#039BE5',
         textColor: '#29B6F6',
       },
       appBar: {
         height: 65,
+      },
+      button: {
+        primaryColor: '#29B6F6',
+        secondaryColor: '#039BE5',
+        margin: 15,
+      },
+      card: {
+        height: '350px',
+        width: '275px',
+        margin: '0 auto',
+        textAlign: 'center',
+        marginTop: '75px',
+      },
+
+      inputs: {
+        width: '50%',
+        margin: '0 auto',
       },
     });
 
@@ -123,7 +140,6 @@ let mapStateToProps = (state) => ({
 });
 
 let mapDispatchToProps = (dispatch) => ({
-
   tokenSet: token => dispatch(auth.tokenSet(token)),
 });
 

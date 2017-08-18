@@ -114,6 +114,7 @@ export class SignupContainer extends React.Component {
               <RaisedButton
                 type='submit'
                 label="Submit"
+                primary={true}
                 style={style.button}
                 fullWidth={false} />
             </div>

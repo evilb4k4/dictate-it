@@ -5,14 +5,14 @@ import * as querystring from 'querystring';
 import TextField from 'material-ui/TextField';
 import IconButton from 'material-ui/IconButton';
 import {Redirect, Link} from 'react-router-dom';
-import {teal500} from 'material-ui/styles/colors';
+// import {teal500} from 'material-ui/styles/colors';
 import {Card, CardActions} from 'material-ui/Card';
 import RaisedButton from 'material-ui/RaisedButton';
 import * as auth from '../../action/auth-actions.js';
 import DictationContainer from '../dictation-container';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-// 
+//
 // import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme';
 
 export class LandingContainer extends React.Component {
@@ -33,7 +33,7 @@ export class LandingContainer extends React.Component {
       },
       button: {
         margin: 15,
-
+        color: '#29B6F6',
       },
     };
     return (
@@ -47,10 +47,11 @@ export class LandingContainer extends React.Component {
               <DictationContainer />
               <RaisedButton
                 label="Create a new dictation "
+
                 labelPosition="before"
                 primary={true}
                 fullWidth={false}
-                style={style.button}
+                style={{color: '#29B6F6'}}
               />
               <br />
               <div className='logout-submit'>
