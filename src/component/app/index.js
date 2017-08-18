@@ -12,7 +12,9 @@ import AppBar from 'material-ui/AppBar';
 import IconButton from 'material-ui/IconButton';
 import NavigationClose from 'material-ui/svg-icons/navigation/close';
 import FlatButton from 'material-ui/FlatButton';
-
+import DrawerMenu from 'material-ui/Drawer';
+import MenuItem from 'material-ui/MenuItem';
+import RaisedButton from 'material-ui/RaisedButton';
 
 import Dictation from '../dictation';
 import LandingContainer from '../landing-container';
@@ -21,15 +23,27 @@ import LoginContainer from '../login-container';
 
 export class App extends React.Component {
 
+  constructor(props) {
+    super(props);
+    this.state = {open: false};
+
+    this.handleToggle = this.handleToggle.bind(this);
+    this.handleClose = this.handleClose.bind(this);
+  }
+
+  handleToggle() {
+    this.setState({open: !this.state.open});
+  }
+
+  handleClose() {
+    this.setState({open: false});
+  }
+
   componentWillMount() {
     let token = util.cookieFetch('Dictation-Token');
     util.log('token', token);
     if(token && token !== 'undefined')
       this.props.tokenSet(token);
-  }
-
-  handleMenuOpen(){
-
   }
 
   render(){
@@ -54,11 +68,34 @@ export class App extends React.Component {
         <div className='app'>
           <AppBar
             title={<span style={styles.title}>Dictate It</span>}
-            iconClassNameRight="muidocs-icon-navigation-expand-more"
+            // iconClassNameRight="muidocs-icon-navigation-expand-more"
             // onTitleTouchTap={handleTouchTap}
             // iconElementLeft={<IconButton><NavigationClose /></IconButton>}
             // iconElementRight={<FlatButton label="Save" />}
           />
+          <div className="drawer">
+            <RaisedButton
+              label="Open Drawer"
+              onClick={this.handleToggle}
+            />
+            <DrawerMenu
+              open={this.state.open}
+              docked={false}
+              width={200}
+              onRequestChange={(open) => this.setState({open})}
+            >
+              <MenuItem
+                // containerElement={<Link to="/team" />}
+                onClick={this.handleClose}>
+                The Team
+              </MenuItem>
+              <MenuItem
+                // containerElement={<Link to="/dictation/*" />}
+                onClick={this.handleClose}>
+                Browse Dictations
+              </MenuItem>
+            </DrawerMenu>
+          </div>
           <BrowserRouter>
             <main>
 

@@ -96,7 +96,8 @@ export class LoginContainer extends React.Component {
                 <RaisedButton label="Sign Up"
                   style={style.button}
                   containerElement={<Link to="/signup" />}
-                  linkButton={true} />
+                  // linkButton={true} 
+                />
                 <br />
                   OR
                 <br />

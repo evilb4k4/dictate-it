@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import superagent from 'superagent';
 import * as util from '../../lib/util.js';
 import * as auth from '../../action/auth-actions.js';
+import {cyan500, grey800} from 'material-ui/styles/colors';
 import {Redirect} from 'react-router-dom';
 import validator from 'validator';
 import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme';
@@ -57,11 +58,16 @@ export class SignupContainer extends React.Component {
       inputs: {
         width: '50%',
         margin: '0 auto',
-
       },
       button: {
         margin: 15,
 
+      },
+      floatingLabelStyle: {
+        color: grey800,
+      },
+      floatingLabelFocusStyle: {
+        color: grey800,
       },
     };
     return(
@@ -78,6 +84,8 @@ export class SignupContainer extends React.Component {
               fullWidth={false}
               value={this.state.email}
               onChange={this.handleChange}
+              floatingLabelStyle={style.floatingLabelStyle}
+              floatingLabelFocusStyle={style.floatingLabelFocusStyle}
             />
             <br />
             <TextField
@@ -87,6 +95,8 @@ export class SignupContainer extends React.Component {
               fullWidth={false}
               value={this.state.username}
               onChange={this.handleChange}
+              floatingLabelStyle={style.floatingLabelStyle}
+              floatingLabelFocusStyle={style.floatingLabelFocusStyle}
             />
             <br />
             <TextField
@@ -97,10 +107,16 @@ export class SignupContainer extends React.Component {
               fullWidth={false}
               value={this.state.password}
               onChange={this.handleChange}
+              floatingLabelStyle={style.floatingLabelStyle}
+              floatingLabelFocusStyle={style.floatingLabelFocusStyle}
             />
             <br />
             <div className='signup-submit'>
-              <RaisedButton type='submit' label="Submit" fullWidth={false} />
+              <RaisedButton
+                type='submit'
+                label="Submit"
+                style={style.button}
+                fullWidth={false} />
             </div>
 
           </form>
