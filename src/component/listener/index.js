@@ -1,28 +1,39 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import * as util from '../../lib/util';
-
+import {Redirect} from 'react-router-dom';
 import AceEditor from 'react-ace';
+import {dictationCreateRequest, dictationUpdateRequest} from '../../action/dictation-actions.js';
+
 import 'brace/mode/text';
 import 'brace/theme/github';
+
+let timerId;
 
 export class Listener extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       listening: false,
-      statements: [],
-      final: '',
+      final: props.dictation.body ? props.dictation.body : '',
       interim: '',
+      title: props.dictation.title ? props.dictation.title : '',
+      description: props.dictation.description ? props.dictation.description : '',
+      recognition: new webkitSpeechRecognition(),
     };
 
     this.handleSave = this.handleSave.bind(this);
     this.handleChange = this.handleChange.bind(this);
-    this.handleStartListening = this.handleStartListening.bind(this);
+    this.handleListener = this.handleListener.bind(this);
   }
 
   handleChange(event) {
-    this.setState({ final: event });
+    if(event.target) {
+      let {name, value} = event.target;
+      this.setState({ [name]: value });
+    } else {
+      this.setState({ final: event });
+    }
   }
 
   shouldComponentUpdate(nextProps){
@@ -33,34 +44,41 @@ export class Listener extends React.Component {
 
   handleSave(event) {
     event.preventDefault();
-    this.props.onSave(this.state.final);
+    util.log(this.props.dictation);
+    let newDict;
+    if(this.props.dictation && Object.keys(this.props.dictation).length !== 0) {
+      newDict = {
+        ...this.props.dictation,
+        body: this.state.final,
+      };
+      this.props.dictationUpdate(newDict);
+    } else {
+      newDict = {
+        title: this.state.title,
+        description: this.state.description,
+        body: this.state.final,
+      };
+      this.props.dictationCreate(newDict);
+    }
   }
 
-  handleStartListening(event) {
+  handleListener(event) {
     event.preventDefault();
     // eslint-disable-next-line no-undef
-    let recognition = new webkitSpeechRecognition();
-    recognition.continuous = true;
-    recognition.interimResults = true;
+    this.state.recognition.continuous = true;
+    this.state.recognition.interimResults = true;
 
-    if(this.state.listening) {
-      this.setState({ listening: false });
-      recognition.stop();
-      return;
-    } else {
-      this.setState({ listening: true });
-    }
+    this.setState({ listening: this.state.listening ? false : true });
 
     let final_transcript = '';
     let recognizing = false;
     let ignore_onend;
     let start_timestamp;
-    let statements = [];
 
-    recognition.onstart = function() {
+    this.state.recognition.onstart = function() {
       recognizing = true;
     };
-    recognition.onerror = function(event) {
+    this.state.recognition.onerror = function(event) {
       if (event.error == 'no-speech') {
         util.log('__no-speech');
         ignore_onend = true;
@@ -74,15 +92,15 @@ export class Listener extends React.Component {
         ignore_onend = true;
       }
     };
-    recognition.onend = function() {
+    this.state.recognition.onend = function() {
       util.log('__onend');
-      recognition.start();
+      this.state.recognition.start();
     };
-    recognition.onresult = function(event) {
+    this.state.recognition.onresult = function(event) {
       util.log('__onresult');
       final_transcript = this.state.final;
-      var interim_transcript = '\n';
-      for (var i = event.resultIndex; i < event.results.length; ++i) {
+      let interim_transcript = '\n';
+      for (let i = event.resultIndex; i < event.results.length; ++i) {
         if (event.results[i].isFinal) {
           final_transcript += `\n${event.results[i][0].transcript}`;
         } else {
@@ -90,50 +108,70 @@ export class Listener extends React.Component {
         }
         util.log('RESULT', event.results[i][0].transcript);
       }
-      final_transcript = capitalize(final_transcript);
-      this.setState({final: linebreak(final_transcript), interim: linebreak(interim_transcript)});
+
+      this.setState({final: final_transcript, interim: interim_transcript});
+      this.forceUpdate();
       util.log('__after onresult');
     };
 
-    recognition.onresult = recognition.onresult.bind(this);
-
     function resetVoiceRecog() {
-      recognition.stop();
+      this.state.recognition.stop();
     }
 
-    let two_line = /\n\n/g;
-    let one_line = /\n/g;
+    this.state.recognition.onresult = this.state.recognition.onresult.bind(this);
+    this.state.recognition.onend = this.state.recognition.onend.bind(this);
+    this.state.recognition.onstart = this.state.recognition.onstart.bind(this);
+    resetVoiceRecog = resetVoiceRecog.bind(this);
 
-    function linebreak(s) {
-      return s.replace(two_line, '<p></p>');
+    try {
+      this.state.recognition.start();
+    } catch(err) {
+      clearInterval(timerId);
+      this.state.recognition.onend = () => null;
+      return;
     }
-
-    let first_char = /\S/;
-    function capitalize(s) {
-      return s.replace(first_char, function(m) { return m.toUpperCase(); });
-    }
-
-    recognition.start();
-    setInterval(resetVoiceRecog, 7500);
+    timerId = setInterval(resetVoiceRecog, 7500);
     ignore_onend = true;
   }
 
   render() {
     return (
       <div>
+        {util.renderIf(!this.props.token,
+          <Redirect to='/' />
+        )}
+        <form onSubmit={(event) => event.preventDefault()}>
+          <input
+            required
+            type='text'
+            name='title'
+            onChange={this.handleChange}
+            value={this.state.title}
+            placeholder='Title'
+          />
+          <input
+            required
+            type='text'
+            name='description'
+            onChange={this.handleChange}
+            value={this.state.description}
+            placeholder='Description'
+          />
+          <button
+            name='save-dictation'
+            onClick={this.handleSave}
+          >
+            Save Dictation
+          </button>
+        </form>
         <button
           name='listener'
-          onClick={this.handleStartListening}
-          >
+          onClick={this.handleListener}
+        >
           {util.renderIf(!this.state.listening, 'Start Listening')}
           {util.renderIf(this.state.listening, 'Stop Listening')}
         </button>
-        <button
-          name='save-dictation'
-          onClick={this.handleSave}
-        >
-          Save Dictation
-        </button>
+
 
         <AceEditor
           name='final'
@@ -161,12 +199,13 @@ export class Listener extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({
-
+export const mapStateToProps = (state) => ({
+  token: state.token,
 });
 
-const mapDispatchToProps = (getState, dispatch) => ({
-
+export const mapDispatchToProps = (dispatch) => ({
+  dictationCreate: dictation => dispatch(dictationCreateRequest(dictation)),
+  dictationUpdate: dictation => dispatch(dictationUpdateRequest(dictation)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Listener);

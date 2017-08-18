@@ -1,45 +1,104 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {Redirect} from 'react-router-dom';
-import {dictationFetchRequest} from '../../action/dictation-actions.js';
+import {Link, Redirect} from 'react-router-dom';
+import {dictationFetchAllRequest, dictationDeleteRequest} from '../../action/dictation-actions.js';
 import * as util from '../../lib/util';
+import superagent from 'superagent';
 
 export class DictationContainer extends React.Component {
   constructor(props){
     super(props);
+    this.state = {
+      ownerId: '',
+    };
+    this.handleDeleteDictation = this.handleDeleteDictation.bind(this);
+    this.getUserFromToken = this.getUserFromToken.bind(this);
+  }
+
+  getUserFromToken(token) {
+    return superagent.get(`${__API_URL__}/user`)
+      .set('Authorization', `Bearer ${token}`)
+      .then(res => {
+        this.setState({ ownerId: res.body._id });
+        return res;
+      });
   }
 
   componentWillMount() {
-    this.props.getDictations()
+    this.props.getAllDictations()
+      .catch(err => util.logError(err));
+    this.getUserFromToken(this.props.token)
+      .catch(err => util.logError(err));
+  }
+
+  handleDeleteDictation(event) {
+    event.preventDefault();
+    this.props.dictationDelete(event.target.id)
+      .then(() => this.props.getAllDictations())
       .catch(err => util.logError(err));
   }
 
   render() {
     return (
-      <table className="dictation-container">
+      <div>
         {util.renderIf(!this.props.token,
           <Redirect to='/' />
         )}
-        <tbody>
-          {this.props.dictations.map((dictation, i) =>
-            <tr key={i}>
-              <td>{dictation.title}</td>
-              <td>{dictation.description}</td>
+        <table className="my-dictations-container">
+          <thead>
+            <tr>
+              <th colSpan={3}>My Dictations</th>
             </tr>
-          )}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {this.props.dictations.filter(dictation => dictation.ownerId === this.state.ownerId).map((dictation, i) =>
+              dictation._id ? <tr key={i}>
+                <td>
+                  <button onClick={this.handleDeleteDictation} id={dictation._id}>X</button>
+                </td>
+                <td>
+                  <Link to={`/dictation/${dictation._id}`}>{dictation.title}</Link>
+                </td>
+                <td>
+                  {dictation.description}
+                </td>
+              </tr>
+              : undefined
+            )}
+          </tbody>
+        </table>
+        <table className="all-dictations-container">
+          <thead>
+            <tr>
+              <th colSpan={2}>Public Dictations</th>
+            </tr>
+          </thead>
+          <tbody>
+            {this.props.dictations.map((dictation, i) =>
+              <tr key={i}>
+                <td>
+                  <Link to={`/dictation/${dictation._id}`}>{dictation.title}</Link>
+                </td>
+                <td>
+                  {dictation.description}
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
     );
   }
 }
 
 export const mapStateToProps = (state) => ({
   token: state.token,
-  dictations: state.dictations
+  dictations: state.dictations,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
-  getDictations: () => dispatch(dictationFetchRequest()),
+  getAllDictations: () => dispatch(dictationFetchAllRequest()),
+  dictationDelete: id => dispatch(dictationDeleteRequest(id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(DictationContainer);
