@@ -2,7 +2,7 @@ import React from 'react';
 import AceEditor from 'react-ace';
 import {connect} from 'react-redux';
 import * as util from '../../lib/util';
-import {Redirect} from 'react-router-dom';
+import {Redirect, Link} from 'react-router-dom';
 import TextField from 'material-ui/TextField';
 import IconButton from 'material-ui/IconButton';
 import {Card, CardActions} from 'material-ui/Card';
@@ -60,7 +60,7 @@ export class Listener extends React.Component {
       util.log('param', param);
 
       let dictation = props.dictations.filter(dictation => dictation._id === param)[0];
-      this.setState({final: dictation.body})
+      this.setState({...dictation, final: dictation})
       // this.setState(
       //   {
       //     final: thisDictation.body ? thisDictation.body : '',
@@ -111,7 +111,8 @@ export class Listener extends React.Component {
         ...this.props.dictation,
         body: this.state.final,
       };
-      this.props.dictationUpdate(newDict);
+      this.props.dictationUpdate(newDict)
+        .then(test => console.log('dsadsadasdasdasdas', test));
     } else {
       newDict = {
         title: this.state.title,
@@ -171,9 +172,11 @@ export class Listener extends React.Component {
       this.setState({final: final_transcript, interim: interim_transcript});
       this.props.liveEdit({
         dictationId: this.props.dictation._id,
+        title: this.props.dictation.title,
+        description: this.props.dictation.description,
         body: this.state.final,
       });
-      this.forceUpdate();
+      // this.forceUpdate();
       util.log('__after onresult');
     };
 
@@ -236,10 +239,17 @@ export class Listener extends React.Component {
     dictation = dictation || {}
     console.log('dictation', dictation)
 
-    dictation.body = this.props.edits[this.props.edits.length - 1] ? this.props.edits[this.props.edits.length - 1].body : dictation.body;
+    if(dictation._id === param) {
+      let edit = this.props.edits[this.props.edits.length - 1];
+      dictation.body = edit ? edit.body : dictation.body;
+      dictation.title = edit ? edit.title : dictation.title;
+      dictation.description = edit ? edit.description : dictation.description;
+    }
+
     return (
       <div className='listening'>
         <IconButton
+          onClick={this.handleListener}
           iconStyle={style.largeIcon}
           style={style.large}
         >
@@ -267,7 +277,7 @@ export class Listener extends React.Component {
                   name='title'
                   underlineStyle={'#29B6F6'}
                   onChange={this.handleChange}
-                  value={this.state.title}
+                  value={this.state.title ? this.state.title : dictation.title}
                   placeholder='Title'
                 />
                 <br />
@@ -276,7 +286,7 @@ export class Listener extends React.Component {
                   name='description'
                   onChange={this.handleChange}
                   underlineStyle={'#29B6F6'}
-                  value={this.state.description}
+                  value={this.state.description ? this.state.description : dictation.description}
                   placeholder='Description'
                 />
                 <br />
@@ -308,6 +318,7 @@ export class Listener extends React.Component {
                 <div className='save-dictation'>
                   <RaisedButton
                     onClick={this.handleSave}
+                    containerElement={<Link to='/landing'></Link>}
                     type='submit'
                     label="Save Dictation"
                     style={style.button}
