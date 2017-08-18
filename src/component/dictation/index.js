@@ -17,9 +17,9 @@ export class Dictation extends React.Component {
   }
 
   render() {
-    let current = {};
+    let current = {}, id;
     try {
-      let id = this.props.history.location.pathname.split('/')[2];
+      id = this.props.history.location.pathname.split('/')[2];
       if(this.props.dictations) {
         this.props.dictations.forEach(dictation => {
           if(dictation._id === id)
@@ -34,7 +34,7 @@ export class Dictation extends React.Component {
         {util.renderIf(!this.props.token,
           <Redirect to='/' />
         )}
-        <Listener dictation={current} onSave={this.handleSave} />
+        <Listener dictation={current} id={id} onSave={this.handleSave} />
       </div>
     );
   }

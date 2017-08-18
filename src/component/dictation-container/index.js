@@ -27,9 +27,7 @@ export class DictationContainer extends React.Component {
 
   componentWillMount() {
     util.log(this.props);
-    // this.props.getAllDictations()
-    //   .then(() => util.log('yo'))
-    //   .catch(err => util.logError(err));
+    this.props.getAllDictations()
     this.getUserFromToken(this.props.token)
       .catch(err => util.logError(err));
   }
@@ -37,11 +35,13 @@ export class DictationContainer extends React.Component {
   handleDeleteDictation(event) {
     event.preventDefault();
     this.props.dictationDelete(event.target.id)
-      .then(() => this.props.getAllDictations())
-      .catch(err => util.logError(err));
+      // .then(() => this.props.getAllDictations())
+      // .catch(err => util.logError(err));
+    this.props.getAllDictations();
   }
 
   render() {
+    util.log('asdasdas', this.props.dictations)
     return (
       <div>
         {util.renderIf(!this.props.token,
@@ -77,8 +77,8 @@ export class DictationContainer extends React.Component {
             </tr>
           </thead>
           <tbody>
-            {this.props.dictations.map((dictation, i) =>
-              <tr key={i}>
+            {this.props.dictations.map((dictation, i) => {
+              return <tr key={i}>
                 <td>
                   <Link to={`/dictation/${dictation._id}`}>{dictation.title}</Link>
                 </td>
@@ -86,7 +86,7 @@ export class DictationContainer extends React.Component {
                   {dictation.description}
                 </td>
               </tr>
-            )}
+            })}
           </tbody>
         </table>
       </div>
@@ -96,7 +96,7 @@ export class DictationContainer extends React.Component {
 
 export const mapStateToProps = (state) => ({
   token: state.token,
-  dictations: state.dictations,
+  dictations: state.dictations ? state.dictations  || []: [],
 });
 
 export const mapDispatchToProps = (dispatch) => ({

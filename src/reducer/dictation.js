@@ -9,7 +9,7 @@ export default (state = initialState, action) => {
   case 'DICTATION_STOP':
     return [...state, payload];
   case 'DICTATION_FETCH':
-    return [...state, payload];
+    return payload
   case 'DICTATION_UPDATE':
     return state.map(dictation =>
       dictation.id == payload.id ? payload : dictation);
