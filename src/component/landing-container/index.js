@@ -5,7 +5,7 @@ import * as querystring from 'querystring';
 import TextField from 'material-ui/TextField';
 import IconButton from 'material-ui/IconButton';
 import {Redirect, Link} from 'react-router-dom';
-import {teal500} from 'material-ui/styles/colors';
+// import {teal500} from 'material-ui/styles/colors';
 import {Card, CardActions} from 'material-ui/Card';
 import RaisedButton from 'material-ui/RaisedButton';
 import * as auth from '../../action/auth-actions.js';
@@ -33,7 +33,8 @@ export class LandingContainer extends React.Component {
       },
       button: {
         margin: 15,
-
+        backgroundColor: '#29B6F6',
+        color: '#FFF',
       },
     };
     return (
@@ -48,12 +49,13 @@ export class LandingContainer extends React.Component {
               <Link to='/dictation'>
                 <RaisedButton
                   label="Create a new dictation "
+                  labelColor={'#FFF'}
                   labelPosition="before"
-                  primary={true}
+                  primary={false}
                   fullWidth={false}
                   style={style.button}
-                />
-              </Link>
+                  backgroundColor={'#29B6F6'}
+                /></Link>
               <br />
               <div className='logout-submit'>
                 <RaisedButton type='submit'

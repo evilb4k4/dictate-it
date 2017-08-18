@@ -5,6 +5,7 @@ import * as util from '../../lib/util';
 import {Redirect} from 'react-router-dom';
 import TextField from 'material-ui/TextField';
 import IconButton from 'material-ui/IconButton';
+import {Card, CardActions} from 'material-ui/Card';
 import RaisedButton from 'material-ui/RaisedButton';
 import Recorder from 'material-ui/svg-icons/hardware/keyboard-voice';
 import {dictationCreateRequest, dictationUpdateRequest} from '../../action/dictation-actions.js';
@@ -200,27 +201,31 @@ export class Listener extends React.Component {
 
     const style = {
       largeIcon: {
-        width: 60,
-        height: 60,
+        width: 100,
+        height: 100,
       },
       large: {
-        width: 120,
-        height: 120,
+        width: 150,
+        height: 150,
         padding: 30,
       },
       card: {
-        height: '350px',
-        width: '275px',
+        height: '50%',
+        width: '50%',
         margin: '0 auto',
         textAlign: 'center',
-        marginTop: '75px',
+        marginTop: '20px',
       },
       inputs: {
+        marginTop: '20px',
         width: '50%',
         margin: '0 auto',
       },
       button: {
         margin: 15,
+      },
+      underlineStyle: {
+        borderColor: '#29B6F6',
       },
     };
 
@@ -233,70 +238,86 @@ export class Listener extends React.Component {
 
     dictation.body = this.props.edits[this.props.edits.length - 1] ? this.props.edits[this.props.edits.length - 1].body : dictation.body;
     return (
-      <div>
-        {util.renderIf(!this.props.token,
-          <Redirect to='/' />
-        )}
-        <form onSubmit={(event) => event.preventDefault()}>
-          <div className='listening'>
-            <IconButton
-              iconStyle={style.largeIcon}
-              style={style.large}
-            >
-              <Recorder />
-              {util.renderIf(!this.state.listening, 'Start Listening')}
-              {util.renderIf(this.state.listening, 'Stop Listening')}
-            </IconButton>
-            <TextField
-              type='text'
-              name='title'
-              onChange={this.handleChange}
-              value={dictation.title}
-              placeholder='Title'
-            />
+      <div className='listening'>
+        <IconButton
+          iconStyle={style.largeIcon}
+          style={style.large}
+        >
+          <Recorder />
+          <div className='recorder'>
+            {util.renderIf(!this.state.listening,
+              'start listening'
+            )}
+            {util.renderIf(this.state.listening,
+              'stop listening'
+            )}
+
+      </div>
+        </IconButton>
+        <div>
+          {util.renderIf(!this.props.token,
+            <Redirect to='/' />
+          )}
+
+          <Card style={style.card} id="save-dictation-card">
+            <form onSubmit={(event) => event.preventDefault()}>
+              <div className='inputs-card'>
+                <TextField
+                  type='text'
+                  name='title'
+                  underlineStyle={'#29B6F6'}
+                  onChange={this.handleChange}
+                  value={this.state.title}
+                  placeholder='Title'
+                />
+                <br />
+                <TextField
+                  type='text'
+                  name='description'
+                  onChange={this.handleChange}
+                  underlineStyle={'#29B6F6'}
+                  value={this.state.description}
+                  placeholder='Description'
+                />
+                <br />
+                <Card style={style.card} id="editor-card">
+                  <div className='editor'>
+                    <AceEditor
+                      name='final'
+                      mode='text'
+                      theme='github'
+                      width='100%'
+                      onChange={this.handleChange}
+                      editorProps={{$blockScrolling: true}}
+                      setOptions={{
+                        wrap: true,
+                        maxLines: Infinity,
+                        autoScrollEditorIntoView: true,
+                        wrapBehavioursEnabled: true,
+                        indentedSoftWrap: false,
+                        behavioursEnabled: false,
+                        showGutter: false,
+                        showLineNumbers: false,
+                        fontSize: 15,
+                      }}
+                      value={this.state.final ? this.state.final : dictation.body}
+                    />
+                    <span>{this.state.interim}</span>
+                  </div>
+                </Card>
+                <div className='save-dictation'>
+                  <RaisedButton
+                    onClick={this.handleSave}
+                    type='submit'
+                    label="Save Dictation"
+                    style={style.button}
+                    fullWidth={false} />
+                </div>
+                <br />
+              </div>
+            </form>
             <br />
-            <TextField
-              type='text'
-              name='description'
-              onChange={this.handleChange}
-              value={dictation.description}
-              placeholder='Description'
-            />
-            <br />
-            <div className='save-dictation'>
-              <RaisedButton
-                onClick={this.handleSave}
-                type='submit'
-                label="Save Dictation"
-                style={style.button}
-                fullWidth={false} />
-            </div>
-            <br />
-          </div>
-        </form>
-        <br />
-        <div className='editor'>
-          <AceEditor
-            name='final'
-            mode='text'
-            theme='github'
-            width='100%'
-            onChange={this.handleChange}
-            editorProps={{$blockScrolling: true}}
-            setOptions={{
-              wrap: true,
-              maxLines: Infinity,
-              autoScrollEditorIntoView: true,
-              wrapBehavioursEnabled: true,
-              indentedSoftWrap: false,
-              behavioursEnabled: false,
-              showGutter: false,
-              showLineNumbers: false,
-              fontSize: 15,
-            }}
-            value={this.state.final ? this.state.final : dictation.body}
-          />
-          <span>{this.state.interim}</span>
+          </Card>
         </div>
       </div>
     );
