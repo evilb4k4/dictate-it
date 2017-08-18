@@ -3,56 +3,44 @@ import {connect} from 'react-redux';
 import {BrowserRouter, Link, Route} from 'react-router-dom';
 import * as util from '../../lib/util.js';
 import * as auth from '../../action/auth-actions.js';
-
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import CoolGuy from 'material-ui/svg-icons/action/record-voice-over';
 import AppBar from 'material-ui/AppBar';
 import IconButton from 'material-ui/IconButton';
-
 import FlatButton from 'material-ui/FlatButton';
 import DrawerMenu from 'material-ui/Drawer';
 import MenuItem from 'material-ui/MenuItem';
 import RaisedButton from 'material-ui/RaisedButton';
-
 import Dictation from '../dictation';
 import LandingContainer from '../landing-container';
 import SignupContainer from '../signup-container';
 import LoginContainer from '../login-container';
-
 export class App extends React.Component {
-
   constructor(props) {
     super(props);
     this.state = {open: false};
-
     this.handleToggle = this.handleToggle.bind(this);
     this.handleClose = this.handleClose.bind(this);
   }
-
   handleToggle() {
     this.setState({open: !this.state.open});
   }
-
   handleClose() {
     this.setState({open: false});
   }
-
   componentWillMount() {
     let token = util.cookieFetch('Dictation-Token');
     util.log('token', token);
     if(token && token !== 'undefined')
       this.props.tokenSet(token);
   }
-
   render(){
-
     const styles = {
       title: {
         cursor: 'pointer',
       },
     };
-
     const muiTheme = getMuiTheme({
       // spacing: Spacing,
       fontFamily: 'Roboto, sans-serif',
@@ -81,11 +69,12 @@ export class App extends React.Component {
         width: '50%',
         margin: '0 auto',
       },
+
       underlineStyle: {
         borderColor: '#29B6F6',
       },
-    });
 
+    });
     return (
       <MuiThemeProvider muiTheme={muiTheme}>
         <div className='app'>
@@ -115,28 +104,22 @@ export class App extends React.Component {
           </div>
           <BrowserRouter>
             <main>
-
               <Route exact path='/' component={LoginContainer} />
               <Route exact path='/signup' component={SignupContainer} />
               <Route exact path='/landing' component={LandingContainer} />
               <Route exact path='/dictation' component={Dictation} />
               <Route exact path='/dictation/*' component={Dictation} />
-
             </main>
           </BrowserRouter>
         </div>
       </MuiThemeProvider>
-
     );
   }
 }
-
 let mapStateToProps = (state) => ({
   token: state.token,
 });
-
 let mapDispatchToProps = (dispatch) => ({
   tokenSet: token => dispatch(auth.tokenSet(token)),
 });
-
 export default connect(mapStateToProps, mapDispatchToProps)(App);

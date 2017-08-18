@@ -10,6 +10,8 @@ import RaisedButton from 'material-ui/RaisedButton';
 import Recorder from 'material-ui/svg-icons/hardware/keyboard-voice';
 import {dictationCreateRequest, dictationUpdateRequest} from '../../action/dictation-actions.js';
 import * as edit from '../../action/edit-actions.js';
+import {dictationFetchAllRequest, dictationDeleteRequest} from '../../action/dictation-actions.js';
+import superagent from 'superagent';
 
 import 'brace/mode/text';
 import 'brace/theme/github';
@@ -32,6 +34,42 @@ export class Listener extends React.Component {
     this.handleSave = this.handleSave.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleListener = this.handleListener.bind(this);
+  }
+
+  getUserFromToken(token) {
+    return superagent.get(`${__API_URL__}/user`)
+      .set('Authorization', `Bearer ${token}`)
+      .then(res => {
+        this.setState({ ownerId: res.body._id });
+        return res;
+      });
+  }
+
+  componentWillMount(){
+    this.props.getAllDictations()
+    this.getUserFromToken(this.props.token)
+      .catch(err => util.logError(err));
+  }
+
+  componentWillReceiveProps(props) {
+    util.log(Object.keys(props.dictation));
+    if(!props.dictation || Object.keys(props.dictation) === 0) {
+
+      // util.log(this.props.location.query)
+      let param =   props.id;
+      util.log('param', param);
+
+      let dictation = props.dictations.filter(dictation => dictation._id === param)[0];
+      this.setState({final: dictation.body})
+      // this.setState(
+      //   {
+      //     final: thisDictation.body ? thisDictation.body : '',
+      //     title: thisDictation.title ? thisDictation.title : '',
+      //     description: thisDictation.description ? thisDictation.description : '',
+      //   }
+      // );
+    }
+
   }
 
   handleChange(event) {
@@ -180,6 +218,13 @@ export class Listener extends React.Component {
         borderColor: '#29B6F6',
       },
     };
+
+    let param = this.props.id;
+    util.log('param', param);
+
+    let dictation = this.props.dictations.filter(dictation => dictation._id === param)[0];
+    dictation = dictation || {}
+    console.log('dictation', dictation)
     return (
       <div className='listening'>
         <IconButton
@@ -194,7 +239,8 @@ export class Listener extends React.Component {
             {util.renderIf(this.state.listening,
               'stop listening'
             )}
-          </div>
+
+      </div>
         </IconButton>
         <div>
           {util.renderIf(!this.props.token,
@@ -270,12 +316,14 @@ export class Listener extends React.Component {
 export const mapStateToProps = (state) => ({
   token: state.token,
   edits: state.edits,
+  dictations: state.dictations ? state.dictations : []
 });
 
 export const mapDispatchToProps = (dispatch) => ({
   dictationCreate: dictation => dispatch(dictationCreateRequest(dictation)),
   dictationUpdate: dictation => dispatch(dictationUpdateRequest(dictation)),
   liveEdit: dictation => dispatch(edit.edit(dictation)),
+  getAllDictations: () => dispatch(dictationFetchAllRequest()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Listener);
