@@ -5,7 +5,7 @@
 
 ### Overview
 
-* This full stack application provides the necessary back-end infrastructure and user interface to create, read, update and destroy dictations created by the user by converting speech to text.
+* This Full-Stack application provides the necessary back-end infrastructure and user interface to create, read, update and destroy dictations created by the user by converting speech to text.
 
 * Considering the fact that transcribing is extremely difficult, there isn't incredible accuracy within transcribing API's. This leads to our goal of allowing users to live edit dictations in order to save their most accurate version.
 
@@ -31,7 +31,7 @@
 
 ### Architecture
 
-* This application is structured in a MERN full stack architecture pattern. We used the React.js library to build the user interface and the frameworks we used were express.js (middleware, node.js web application framework), node.js (JS runtime built on Chromes V8 JS engine), and mongodb(open source document database for querying and indexing).
+* This application is structured in a MERN architecture pattern. We used the React.js library to build the user interface and the frameworks we used were express.js (middleware, node.js web application framework), node.js (JS runtime built on Chromes V8 JS engine), and mongodb(open source document database for querying and indexing).
 
 ### Middleware
 
