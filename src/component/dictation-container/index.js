@@ -5,6 +5,7 @@ import {dictationFetchAllRequest, dictationDeleteRequest} from '../../action/dic
 import * as util from '../../lib/util';
 import superagent from 'superagent';
 
+
 export class DictationContainer extends React.Component {
   constructor(props){
     super(props);
@@ -63,7 +64,7 @@ export class DictationContainer extends React.Component {
                   {dictation.description}
                 </td>
               </tr>
-              : undefined
+                : undefined
             )}
           </tbody>
         </table>

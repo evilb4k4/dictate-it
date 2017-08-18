@@ -4,12 +4,15 @@ import * as util from '../../lib/util';
 import * as auth from '../../action/auth-actions.js';
 import * as querystring from 'querystring';
 import {Redirect, Link} from 'react-router-dom';
+import {Card, CardActions} from 'material-ui/Card';
 import RaisedButton from 'material-ui/RaisedButton';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme';
 import {cyan500} from 'material-ui/styles/colors';
 import TextField from 'material-ui/TextField';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import IconButton from 'material-ui/IconButton';
+import googleSVG from '../../assets/google.svg';
 
 
 export class LoginContainer extends React.Component {
@@ -51,49 +54,84 @@ export class LoginContainer extends React.Component {
       prompt: __DEBUG__ ? 'consent' : undefined,
     });
 
+    const style ={
+      card: {
+        height: '350px',
+        width: '275px',
+        margin: '0 auto',
+        textAlign: 'center',
+        marginTop: '75px',
+      },
+
+      inputs: {
+        width: '50%',
+        margin: '0 auto',
+
+      },
+      button: {
+        margin: 15,
+
+      },
+    };
+
     let googleLoginURL = `${googleLoginBaseURL}?${googleLoginQuery}`;
     return(
-      <div className='login-container'>
-        <header>
-          <h1> Dictate It </h1>
+      <Card style={style.card} id="login-card">
+        <div className='login-container'>
+          <header>
+            {util.renderIf(!this.props.token,
+              <div className='login'>
+                <RaisedButton
+                  href={googleLoginURL}
+                  label="Login with "
+                  labelPosition="before"
+                  primary={true}
+                  fullWidth={false}
+                  style={style.button}
+                  icon={<img src={googleSVG} width={25} height={25}/>}
+                />
+                <br />
+                OR
+                <br />
+                <RaisedButton label="Sign Up"
+                  style={style.button}
+                  containerElement={<Link to="/signup" />}
+                  // linkButton={true} 
+                />
+                <br />
+                  OR
+                <br />
+              </div>
+            )}
+          </header>
           {util.renderIf(this.props.token,
-            <p>
-              <Link to='/landing'>Home</Link>
-              <Link to='/dictation'>New Dictation</Link>
-              <button onClick={this.props.logout}>Logout</button>
-            </p>
+            <Redirect to='/landing' />
           )}
-          {util.renderIf(!this.props.token,
-            <div className='login'>
-              <Link to='/'>Login</Link>
-              <div className="g-signin2" data-onsuccess="onSignIn"><a href={googleLoginURL}>
-                  Login with Google</a></div>
-              <Link to='/signup'>Sign Up</Link>
+          <form className='login-form' onSubmit={this.handleSubmit}>
+            <TextField
+              style={style.inputs}
+              name='username'
+              hintText='username'
+              fullWidth={false}
+              value={this.state.username}
+              onChange={this.handleChange}
+            />
+            <br />
+            <TextField
+              style={style.inputs}
+              name='password'
+              hintText='password'
+              fullWidth={false}
+              value={this.state.password}
+              onChange={this.handleChange}
+            />
+            <br />
+            <div className='login-submit'>
+              <RaisedButton type='submit' label="Submit" fullWidth={false} />
             </div>
-          )}
-        </header>
-        {util.renderIf(this.props.token,
-          <Redirect to='/landing' />
-        )}
-        <form className='login-form' onSubmit={this.handleSubmit}>
-          <TextField
-            name='username'
-            hintText='username'
-            value={this.state.username}
-            onChange={this.handleChange}
-          />
-          <TextField
-            name='password'
-            hintText='password'
-            value={this.state.password}
-            onChange={this.handleChange}
-          />
-
-          <div className='login-submit'>
-            <RaisedButton type='submit' label="Submit" fullWidth={true} />
-          </div>
-        </form>
-      </div>
+          </form>
+        </div>
+      </Card>
     );
   }
 }
