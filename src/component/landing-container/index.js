@@ -46,13 +46,14 @@ export class LandingContainer extends React.Component {
             <div className='dictation'>
               <DictationContainer />
               <Link to='/dictation'>
-              <RaisedButton
-                label="Create a new dictation "
-                labelPosition="before"
-                primary={true}
-                fullWidth={false}
-                style={style.button}
-              /></Link>
+                <RaisedButton
+                  label="Create a new dictation "
+                  labelPosition="before"
+                  primary={true}
+                  fullWidth={false}
+                  style={style.button}
+                />
+              </Link>
               <br />
               <div className='logout-submit'>
                 <RaisedButton type='submit'
