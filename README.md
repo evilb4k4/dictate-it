@@ -64,7 +64,21 @@
 
     * The user Schema has methods attached to it for creating a user, creating a token, creating a tokenSeed, hashing a password, and password hash compare.
 
-## **Routes**
+
+#### Front-end
+
+##### Views
+    - The views are handled in a component architecture.
+
+##### Redux
+     - Redux.js is a predictable state container that requires *actions* (plain objects) to be dispatched in order to change the application state.  The state cannot be modified directly.  This provides predictability, i.e. the same actions in the same order will produce the same results.
+
+
+
+#### Back-end
+
+##### RESTful API Routes – All data is returned as JSON
+
 
 ### POST /api/signup
 &nbsp;
