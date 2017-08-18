@@ -4,10 +4,9 @@ import {connect} from 'react-redux';
 import superagent from 'superagent';
 import * as util from '../../lib/util.js';
 import * as auth from '../../action/auth-actions.js';
-import {cyan500, grey800} from 'material-ui/styles/colors';
+import {} from 'material-ui/styles/colors';
 import {Redirect} from 'react-router-dom';
 import validator from 'validator';
-import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme';
 import RaisedButton from 'material-ui/RaisedButton';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import TextField from 'material-ui/TextField';
@@ -64,10 +63,10 @@ export class SignupContainer extends React.Component {
 
       },
       floatingLabelStyle: {
-        color: grey800,
+        color: '#29B6F6',
       },
       floatingLabelFocusStyle: {
-        color: grey800,
+        color: '#29B6F6',
       },
     };
     return(
@@ -84,7 +83,7 @@ export class SignupContainer extends React.Component {
               fullWidth={false}
               value={this.state.email}
               onChange={this.handleChange}
-              floatingLabelStyle={style.floatingLabelStyle}
+              floatingLabelStyle={{color: 'color: grey800'}}
               floatingLabelFocusStyle={style.floatingLabelFocusStyle}
             />
             <br />
@@ -95,7 +94,7 @@ export class SignupContainer extends React.Component {
               fullWidth={false}
               value={this.state.username}
               onChange={this.handleChange}
-              floatingLabelStyle={style.floatingLabelStyle}
+              floatingLabelStyle={{color: 'color: grey800'}}
               floatingLabelFocusStyle={style.floatingLabelFocusStyle}
             />
             <br />
@@ -107,7 +106,7 @@ export class SignupContainer extends React.Component {
               fullWidth={false}
               value={this.state.password}
               onChange={this.handleChange}
-              floatingLabelStyle={style.floatingLabelStyle}
+              floatingLabelStyle={{color: 'color: grey800'}}
               floatingLabelFocusStyle={style.floatingLabelFocusStyle}
             />
             <br />

@@ -6,11 +6,12 @@ import * as auth from '../../action/auth-actions.js';
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
-import {cyan500} from 'material-ui/styles/colors';
-
+import {teal500} from 'material-ui/styles/colors';
+// import Spacing from 'material-ui/lib/styles/spacing';
+import CoolGuy from 'material-ui/svg-icons/action/record-voice-over';
 import AppBar from 'material-ui/AppBar';
 import IconButton from 'material-ui/IconButton';
-import NavigationClose from 'material-ui/svg-icons/navigation/close';
+// import NavigationClose from 'material-ui/svg-icons/navigation/close';
 import FlatButton from 'material-ui/FlatButton';
 import DrawerMenu from 'material-ui/Drawer';
 import MenuItem from 'material-ui/MenuItem';
@@ -55,11 +56,13 @@ export class App extends React.Component {
     };
 
     const muiTheme = getMuiTheme({
+      // spacing: Spacing,
+      fontFamily: 'Roboto, sans-serif',
       palette: {
-        textColor: cyan500,
+        textColor: '#29B6F6',
       },
       appBar: {
-        height: 50,
+        height: 65,
       },
     });
 
@@ -67,8 +70,9 @@ export class App extends React.Component {
       <MuiThemeProvider muiTheme={muiTheme}>
         <div className='app'>
           <AppBar
-            title={<span style={styles.title}>Dictate It</span>}
-            // iconClassNameRight="muidocs-icon-navigation-expand-more"
+            style={{backgroundColor: '#29B6F6'}}
+            title={<span style={styles.title}>DICTATE IT</span>}
+            iconElementLeft={<IconButton><CoolGuy /></IconButton>}
             // onTitleTouchTap={handleTouchTap}
             // iconElementLeft={<IconButton><NavigationClose /></IconButton>}
             // iconElementRight={<FlatButton label="Save" />}
