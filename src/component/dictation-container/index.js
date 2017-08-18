@@ -1,7 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {Link, Redirect} from 'react-router-dom';
-import {dictationFetchAllRequest, dictationMineRequest, dictationDeleteRequest} from '../../action/dictation-actions.js';
+import {dictationFetchAllRequest, dictationDeleteRequest} from '../../action/dictation-actions.js';
 import * as util from '../../lib/util';
 
 export class DictationContainer extends React.Component {
@@ -81,12 +81,10 @@ export class DictationContainer extends React.Component {
 export const mapStateToProps = (state) => ({
   token: state.token,
   dictations: state.dictations,
-  myDictations: state.myDictations,
 });
 
 export const mapDispatchToProps = (dispatch) => ({
   getAllDictations: () => dispatch(dictationFetchAllRequest()),
-  getMyDictations: () => dispatch(dictationMineRequest()),
   dictationDelete: id => dispatch(dictationDeleteRequest(id)),
 });
 
